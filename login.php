@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <style>
         body {
             font-family: Arial, Helvetica, sans-serif;
-            background: #f4f6f8;
+            background: #E6F4F1;
             margin: 0;
             display: flex;
             align-items: center;
@@ -77,17 +77,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .card {
-            background: #ffffff;
+            background: #FFFFFF;
             padding: 2.5rem 3rem;
             border-radius: 12px;
-            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+            box-shadow: 0 18px 40px rgba(0, 56, 64, 0.12);
             width: min(100%, 420px);
         }
 
         h1 {
             margin-top: 0;
             margin-bottom: 1.5rem;
-            color: #1f2933;
+            color: #003840;
             text-align: center;
         }
 
@@ -101,29 +101,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             flex-direction: column;
             gap: 0.4rem;
             font-weight: 600;
-            color: #334155;
+            color: #005A5B;
         }
 
         input {
             padding: 0.75rem 1rem;
             border-radius: 8px;
-            border: 1px solid #cbd5f5;
+            border: 1px solid #8FD6C8;
             font-size: 1rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #008C72;
+            box-shadow: 0 0 0 3px rgba(0, 140, 114, 0.25);
         }
 
         button {
             padding: 0.9rem 1.2rem;
             border: none;
             border-radius: 999px;
-            background: #6366f1;
-            color: #ffffff;
+            background: #008C72;
+            color: #FFFFFF;
             font-size: 1rem;
             cursor: pointer;
-            transition: background 0.2s ease;
+            transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         button:hover {
-            background: #4f46e5;
+            background: #007369;
+            transform: translateY(-1px);
+            box-shadow: 0 10px 20px rgba(0, 115, 105, 0.25);
         }
 
         .messages {
@@ -135,25 +144,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .error {
             padding: 0.75rem 1rem;
             border-radius: 8px;
-            background: #fee2e2;
-            color: #991b1b;
+            background: rgba(0, 56, 64, 0.12);
+            color: #003840;
         }
 
         .success {
             padding: 0.75rem 1rem;
             border-radius: 8px;
-            background: #dcfce7;
-            color: #166534;
+            background: rgba(2, 166, 118, 0.12);
+            color: #007369;
         }
 
         .redirect {
             margin-top: 1.25rem;
             text-align: center;
-            color: #52606d;
+            color: #005A5B;
         }
 
         .redirect a {
-            color: #4f46e5;
+            color: #02A676;
             text-decoration: none;
             font-weight: 600;
         }

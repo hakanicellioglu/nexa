@@ -19,9 +19,9 @@ if (!function_exists('nexaHeaderStyles')) {
         align-items: center;
         justify-content: space-between;
         padding: 1rem 2.5rem;
-        background: #111827;
-        color: #f9fafb;
-        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.25);
+        background: #003840;
+        color: #E8F9F3;
+        box-shadow: 0 10px 24px rgba(0, 56, 64, 0.25);
     }
 
     .nexa-logo {
@@ -41,11 +41,11 @@ if (!function_exists('nexaHeaderStyles')) {
         width: 42px;
         height: 42px;
         border-radius: 12px;
-        background: linear-gradient(135deg, #6366f1, #ec4899);
+        background: linear-gradient(135deg, #007369, #02A676);
         align-items: center;
         justify-content: center;
         font-size: 1.15rem;
-        color: #ffffff;
+        color: #FFFFFF;
     }
 
     .nexa-nav {
@@ -56,7 +56,7 @@ if (!function_exists('nexaHeaderStyles')) {
     }
 
     .nexa-nav a {
-        color: #e5e7eb;
+        color: #CDEAE5;
         text-decoration: none;
         font-weight: 500;
         letter-spacing: 0.01em;
@@ -65,7 +65,7 @@ if (!function_exists('nexaHeaderStyles')) {
 
     .nexa-nav a:hover,
     .nexa-nav a:focus {
-        color: #ffffff;
+        color: #FFFFFF;
     }
 
     .nexa-profile-dropdown {
@@ -87,8 +87,8 @@ if (!function_exists('nexaHeaderStyles')) {
         gap: 0.5rem;
         padding: 0.6rem 1.4rem;
         border-radius: 999px;
-        background: #2563eb;
-        color: #ffffff;
+        background: #008C72;
+        color: #FFFFFF;
         border: none;
         cursor: pointer;
         font-weight: 600;
@@ -98,7 +98,7 @@ if (!function_exists('nexaHeaderStyles')) {
 
     .nexa-profile-toggle:focus,
     .nexa-profile-toggle:hover {
-        background: #1d4ed8;
+        background: #007369;
         transform: translateY(-1px);
     }
 
@@ -113,9 +113,9 @@ if (!function_exists('nexaHeaderStyles')) {
         right: 0;
         margin-top: 0.5rem;
         min-width: 180px;
-        background: #1f2937;
+        background: #005A5B;
         border-radius: 12px;
-        box-shadow: 0 12px 24px rgba(15, 23, 42, 0.35);
+        box-shadow: 0 12px 24px rgba(0, 56, 64, 0.35);
         padding: 0.4rem;
         display: flex;
         flex-direction: column;
@@ -127,7 +127,7 @@ if (!function_exists('nexaHeaderStyles')) {
         display: block;
         padding: 0.6rem 0.9rem;
         border-radius: 8px;
-        color: #f9fafb;
+        color: #E8F9F3;
         text-decoration: none;
         font-weight: 500;
         transition: background 0.2s ease;
@@ -135,7 +135,7 @@ if (!function_exists('nexaHeaderStyles')) {
 
     .nexa-profile-menu a:hover,
     .nexa-profile-menu a:focus {
-        background: rgba(59, 130, 246, 0.25);
+        background: rgba(0, 140, 114, 0.25);
     }
 
     .nexa-profile-dropdown:not([open]) .nexa-profile-menu {
