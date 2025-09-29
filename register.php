@@ -81,26 +81,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <style>
         body {
             font-family: Arial, Helvetica, sans-serif;
-            background: #f4f6f8;
+            background: #e1e1e1;
             margin: 0;
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
+            color: #282828;
         }
 
         .card {
             background: #ffffff;
             padding: 2.5rem 3rem;
             border-radius: 12px;
-            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+            box-shadow: 0 18px 40px rgba(40, 40, 40, 0.18);
             width: min(100%, 480px);
         }
 
         h1 {
             margin-top: 0;
             margin-bottom: 1.5rem;
-            color: #1f2933;
+            color: #282828;
             text-align: center;
         }
 
@@ -114,29 +115,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             flex-direction: column;
             gap: 0.4rem;
             font-weight: 600;
-            color: #334155;
+            color: #464646;
         }
 
         input {
             padding: 0.75rem 1rem;
             border-radius: 8px;
-            border: 1px solid #cbd5f5;
+            border: 1px solid #7d7d7d;
             font-size: 1rem;
+            background: #ffffff;
+            color: #282828;
         }
 
         button {
             padding: 0.9rem 1.2rem;
             border: none;
             border-radius: 999px;
-            background: #6366f1;
+            background: #282828;
             color: #ffffff;
             font-size: 1rem;
             cursor: pointer;
-            transition: background 0.2s ease;
+            transition: background 0.2s ease, color 0.2s ease;
         }
 
         button:hover {
-            background: #4f46e5;
+            background: #464646;
+            color: #ffffff;
         }
 
         .messages {
@@ -148,15 +152,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .error {
             padding: 0.75rem 1rem;
             border-radius: 8px;
-            background: #fee2e2;
-            color: #991b1b;
+            background: rgba(40, 40, 40, 0.08);
+            color: #282828;
+            border-left: 4px solid #282828;
         }
 
         .success {
             padding: 0.75rem 1rem;
             border-radius: 8px;
-            background: #dcfce7;
-            color: #166534;
+            background: rgba(125, 125, 125, 0.12);
+            color: #282828;
+            border-left: 4px solid #7d7d7d;
         }
 
         .back-link {
@@ -165,13 +171,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .back-link a {
-            color: #6366f1;
+            color: #282828;
             text-decoration: none;
             font-weight: 600;
         }
 
         .back-link a:hover {
             text-decoration: underline;
+            color: #464646;
         }
     </style>
 </head>

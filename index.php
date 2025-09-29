@@ -13,7 +13,8 @@
             min-height: 100vh;
             align-items: center;
             justify-content: center;
-            background: #f4f6f8;
+            background: #e1e1e1;
+            color: #282828;
         }
 
         .container {
@@ -21,18 +22,18 @@
             background: #ffffff;
             padding: 3rem 4rem;
             border-radius: 12px;
-            box-shadow: 0 20px 45px rgba(15, 23, 42, 0.12);
+            box-shadow: 0 20px 45px rgba(40, 40, 40, 0.18);
         }
 
         h1 {
             margin-bottom: 1.5rem;
-            color: #1f2933;
+            color: #282828;
             font-size: 2.25rem;
         }
 
         p {
             margin-bottom: 2.5rem;
-            color: #52606d;
+            color: #464646;
             font-size: 1.1rem;
         }
 
@@ -58,16 +59,16 @@
 
         .actions button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 22px rgba(79, 70, 229, 0.25);
+            box-shadow: 0 12px 22px rgba(70, 70, 70, 0.25);
         }
 
         .login {
-            background: #6366f1;
+            background: #282828;
             color: #ffffff;
         }
 
         .register {
-            background: #f97316;
+            background: #464646;
             color: #ffffff;
         }
     </style>

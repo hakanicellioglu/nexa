@@ -68,8 +68,8 @@ $totalSuppliers = count($suppliers);
         body {
             margin: 0;
             font-family: "Inter", Arial, sans-serif;
-            background: #0f172a;
-            color: #f8fafc;
+            background: #282828;
+            color: #ffffff;
         }
 
         main {
@@ -81,11 +81,11 @@ $totalSuppliers = count($suppliers);
         }
 
         .hero {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(236, 72, 153, 0.12));
-            border: 1px solid rgba(148, 163, 184, 0.18);
+            background: linear-gradient(135deg, rgba(70, 70, 70, 0.35), rgba(125, 125, 125, 0.25));
+            border: 1px solid rgba(225, 225, 225, 0.12);
             border-radius: 20px;
             padding: 2.5rem;
-            box-shadow: 0 20px 55px rgba(15, 23, 42, 0.35);
+            box-shadow: 0 20px 55px rgba(40, 40, 40, 0.35);
         }
 
         .hero h1 {
@@ -96,7 +96,7 @@ $totalSuppliers = count($suppliers);
 
         .hero p {
             margin: 0;
-            color: #cbd5f5;
+            color: #e1e1e1;
             font-size: 1.1rem;
             max-width: 720px;
             line-height: 1.6;
@@ -107,25 +107,25 @@ $totalSuppliers = count($suppliers);
             display: inline-flex;
             align-items: center;
             gap: 0.75rem;
-            background: rgba(15, 23, 42, 0.6);
+            background: rgba(40, 40, 40, 0.6);
             padding: 0.85rem 1.25rem;
             border-radius: 999px;
-            border: 1px solid rgba(99, 102, 241, 0.45);
-            color: #e0e7ff;
+            border: 1px solid rgba(125, 125, 125, 0.35);
+            color: #ffffff;
             font-weight: 600;
         }
 
         .table-card {
-            background: rgba(15, 23, 42, 0.92);
+            background: rgba(40, 40, 40, 0.92);
             border-radius: 18px;
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            box-shadow: 0 16px 35px rgba(15, 23, 42, 0.35);
+            border: 1px solid rgba(125, 125, 125, 0.25);
+            box-shadow: 0 16px 35px rgba(40, 40, 40, 0.35);
             overflow: hidden;
         }
 
         .table-header {
             padding: 1.5rem 2rem;
-            border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+            border-bottom: 1px solid rgba(225, 225, 225, 0.12);
             display: flex;
             flex-wrap: wrap;
             align-items: center;
@@ -155,29 +155,29 @@ $totalSuppliers = count($suppliers);
         }
 
         .table-actions button:focus-visible {
-            outline: 2px solid rgba(96, 165, 250, 0.65);
+            outline: 2px solid rgba(225, 225, 225, 0.65);
             outline-offset: 2px;
         }
 
         .action-add {
-            background: linear-gradient(135deg, rgba(96, 165, 250, 0.95), rgba(59, 130, 246, 0.95));
-            color: #0f172a;
-            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.35);
+            background: linear-gradient(135deg, #282828, #464646);
+            color: #ffffff;
+            box-shadow: 0 10px 20px rgba(40, 40, 40, 0.4);
         }
 
         .action-edit {
-            background: rgba(251, 191, 36, 0.25);
-            color: #fbbf24;
+            background: rgba(125, 125, 125, 0.2);
+            color: #e1e1e1;
         }
 
         .action-delete {
-            background: rgba(248, 113, 113, 0.22);
-            color: #f87171;
+            background: rgba(70, 70, 70, 0.25);
+            color: #ffffff;
         }
 
         .table-actions button:hover {
             transform: translateY(-1px);
-            box-shadow: 0 12px 18px rgba(15, 23, 42, 0.25);
+            box-shadow: 0 12px 18px rgba(40, 40, 40, 0.25);
         }
 
         .table-actions button:disabled {
@@ -198,7 +198,7 @@ $totalSuppliers = count($suppliers);
         }
 
         thead {
-            background: rgba(30, 41, 59, 0.8);
+            background: rgba(70, 70, 70, 0.65);
         }
 
         th,
@@ -210,34 +210,35 @@ $totalSuppliers = count($suppliers);
 
         th {
             font-weight: 600;
-            color: #cbd5f5;
+            color: #e1e1e1;
             font-size: 0.95rem;
         }
 
         td {
-            color: #e2e8f0;
+            color: #ffffff;
             font-size: 0.95rem;
         }
 
         tbody tr:hover {
-            background: rgba(99, 102, 241, 0.08);
+            background: rgba(125, 125, 125, 0.15);
         }
 
         .empty-state {
             padding: 2.5rem;
             text-align: center;
-            color: #94a3b8;
+            color: #e1e1e1;
             font-size: 1rem;
         }
 
         a.supplier-link {
-            color: #60a5fa;
+            color: #e1e1e1;
             text-decoration: none;
         }
 
         a.supplier-link:hover,
         a.supplier-link:focus {
             text-decoration: underline;
+            color: #ffffff;
         }
 
         @media (max-width: 768px) {
