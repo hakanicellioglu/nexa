@@ -101,8 +101,8 @@ $metricData = array_map(
         body {
             margin: 0;
             font-family: "Inter", Arial, sans-serif;
-            background: #0f172a;
-            color: #f8fafc;
+            background: #003840;
+            color: #E8F9F3;
         }
 
         main {
@@ -112,11 +112,11 @@ $metricData = array_map(
         }
 
         .intro {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(14, 165, 233, 0.12));
-            border: 1px solid rgba(148, 163, 184, 0.2);
+            background: linear-gradient(135deg, rgba(0, 140, 114, 0.18), rgba(2, 166, 118, 0.16));
+            border: 1px solid rgba(2, 166, 118, 0.35);
             border-radius: 20px;
             padding: 2.5rem;
-            box-shadow: 0 20px 55px rgba(15, 23, 42, 0.35);
+            box-shadow: 0 20px 55px rgba(0, 56, 64, 0.35);
         }
 
         .intro h1 {
@@ -127,7 +127,7 @@ $metricData = array_map(
 
         .intro p {
             margin: 0;
-            color: #cbd5f5;
+            color: #B4E8DC;
             font-size: 1.05rem;
             max-width: 680px;
             line-height: 1.6;
@@ -140,11 +140,11 @@ $metricData = array_map(
         }
 
         .card {
-            background: rgba(15, 23, 42, 0.85);
+            background: rgba(0, 90, 91, 0.85);
             border-radius: 18px;
             padding: 1.75rem;
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            box-shadow: 0 12px 32px rgba(15, 23, 42, 0.35);
+            border: 1px solid rgba(2, 166, 118, 0.2);
+            box-shadow: 0 12px 32px rgba(0, 56, 64, 0.35);
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
@@ -153,18 +153,18 @@ $metricData = array_map(
 
         .card:hover {
             transform: translateY(-4px);
-            border-color: rgba(99, 102, 241, 0.6);
+            border-color: rgba(2, 166, 118, 0.55);
         }
 
         .card h2 {
             margin: 0;
             font-size: 1.25rem;
-            color: #e0e7ff;
+            color: #D4FFF2;
         }
 
         .card p {
             margin: 0;
-            color: #cbd5f5;
+            color: #B4E8DC;
             line-height: 1.5;
         }
 
@@ -175,11 +175,11 @@ $metricData = array_map(
         }
 
         .metric-tile {
-            background: rgba(30, 64, 175, 0.4);
+            background: rgba(0, 140, 114, 0.28);
             border-radius: 16px;
             padding: 1.5rem;
             text-align: center;
-            border: 1px solid rgba(96, 165, 250, 0.4);
+            border: 1px solid rgba(2, 166, 118, 0.45);
         }
 
         .metric-tile h3 {
@@ -187,7 +187,7 @@ $metricData = array_map(
             font-size: 0.95rem;
             letter-spacing: 0.06em;
             text-transform: uppercase;
-            color: #bfdbfe;
+            color: #CFFCEB;
         }
 
         .metric-tile span {
@@ -201,8 +201,8 @@ $metricData = array_map(
             justify-content: center;
             font-size: 0.9rem;
             font-weight: 500;
-            color: #bfdbfe;
-            background: rgba(30, 64, 175, 0.25);
+            color: #CFFCEB;
+            background: rgba(0, 115, 105, 0.25);
             border-radius: 999px;
             padding: 0.35rem 0.85rem;
         }

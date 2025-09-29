@@ -63,21 +63,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         <style>
             :root {
                 color-scheme: light dark;
-                --bg-color: #eef2ff;
-                --card-bg: #ffffff;
-                --primary: #2563eb;
-                --primary-dark: #1d4ed8;
-                --danger: #dc2626;
-                --text-color: #111827;
-                --muted-text: #6b7280;
+                --bg-color: #E6F4F1;
+                --card-bg: #FFFFFF;
+                --primary: #008C72;
+                --primary-dark: #007369;
+                --danger: #003840;
+                --text-color: #003840;
+                --muted-text: #005A5B;
             }
 
             @media (prefers-color-scheme: dark) {
                 :root {
-                    --bg-color: #0b1220;
-                    --card-bg: #111827;
-                    --text-color: #e5e7eb;
-                    --muted-text: #9ca3af;
+                    --bg-color: #003840;
+                    --card-bg: #005A5B;
+                    --text-color: #E8F9F3;
+                    --muted-text: #C3EDE3;
                 }
             }
 
@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 border-radius: 18px;
                 padding: 36px;
                 width: min(620px, 100%);
-                box-shadow: 0 25px 50px rgba(37, 99, 235, 0.2);
+                box-shadow: 0 25px 50px rgba(0, 56, 64, 0.2);
             }
 
             h1 {
@@ -127,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 width: 100%;
                 padding: 12px 14px;
                 border-radius: 10px;
-                border: 1px solid rgba(37, 99, 235, 0.25);
+                border: 1px solid rgba(0, 140, 114, 0.35);
                 font-size: 1rem;
                 background: transparent;
                 transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -137,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             input:focus, textarea:focus {
                 outline: none;
                 border-color: var(--primary);
-                box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+                box-shadow: 0 0 0 4px rgba(0, 140, 114, 0.2);
             }
 
             .actions {
@@ -159,13 +159,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
             button.primary {
                 background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-                color: #fff;
-                box-shadow: 0 10px 32px rgba(37, 99, 235, 0.35);
+                color: #FFFFFF;
+                box-shadow: 0 10px 32px rgba(0, 115, 105, 0.35);
             }
 
             button.primary:hover {
                 transform: translateY(-1px);
-                box-shadow: 0 14px 36px rgba(37, 99, 235, 0.4);
+                box-shadow: 0 14px 36px rgba(0, 115, 105, 0.4);
+            }
+
+            .actions button:not(.primary) {
+                background: rgba(0, 90, 91, 0.18);
+                color: var(--text-color);
+            }
+
+            .actions button:not(.primary):hover {
+                background: rgba(0, 90, 91, 0.28);
             }
 
             .status {
@@ -178,13 +187,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
             .status.success {
                 display: block;
-                background: rgba(22, 163, 74, 0.12);
-                color: #15803d;
+                background: rgba(2, 166, 118, 0.12);
+                color: #007369;
             }
 
             .status.error {
                 display: block;
-                background: rgba(220, 38, 38, 0.12);
+                background: rgba(0, 56, 64, 0.12);
                 color: var(--danger);
             }
 
