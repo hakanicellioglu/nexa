@@ -180,7 +180,7 @@ if (!function_exists('renderNexaHeader')) {
         echo sprintf(
             <<<'HTML'
 <header class="nexa-header">
-    <a class="nexa-logo" href="index.php">
+    <a class="nexa-logo" href="dashboard.php">
         <span>Nx</span>
         <div>Nexa Portal</div>
     </a>
