@@ -2,6 +2,57 @@
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     header('Content-Type: text/html; charset=utf-8');
+
+    $supplier = [
+        'id' => '',
+        'name' => '',
+        'address' => '',
+        'email' => '',
+        'website' => '',
+        'phonenumber' => ''
+    ];
+
+    $statusClass = '';
+    $statusMessage = '';
+
+    if (isset($_GET['id']) && $_GET['id'] !== '') {
+        $requestedId = (int) $_GET['id'];
+
+        if ($requestedId > 0) {
+            require_once __DIR__ . '/../../config.php';
+
+            $stmt = $connection->prepare('SELECT id, name, address, email, COALESCE(website, \'\') AS website, phonenumber FROM suppliers WHERE id = ?');
+
+            if ($stmt && $stmt->bind_param('i', $requestedId) && $stmt->execute()) {
+                $stmt->bind_result($id, $name, $address, $email, $website, $phoneNumber);
+
+                if ($stmt->fetch()) {
+                    $supplier = [
+                        'id' => (int) $id,
+                        'name' => (string) $name,
+                        'address' => (string) $address,
+                        'email' => (string) $email,
+                        'website' => (string) $website,
+                        'phonenumber' => (string) $phoneNumber
+                    ];
+                } else {
+                    $supplier['id'] = $requestedId;
+                    $statusClass = 'error';
+                    $statusMessage = 'Belirtilen kimlikte bir tedarikçi bulunamadı.';
+                }
+            } else {
+                $statusClass = 'error';
+                $statusMessage = 'Tedarikçi bilgileri alınırken bir hata oluştu.';
+            }
+
+            if ($stmt instanceof mysqli_stmt) {
+                $stmt->close();
+            }
+        } else {
+            $statusClass = 'error';
+            $statusMessage = 'Geçerli bir tedarikçi kimliği girin.';
+        }
+    }
     ?>
     <!DOCTYPE html>
     <html lang="tr">
@@ -154,34 +205,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         <form id="supplier-edit-form" class="form-grid">
             <div>
                 <label for="id">Tedarikçi ID</label>
-                <input type="number" id="id" name="id" min="1" placeholder="1" required>
+                <input type="number" id="id" name="id" min="1" placeholder="1" required value="<?php echo $supplier['id'] !== '' ? htmlspecialchars((string) $supplier['id'], ENT_QUOTES, 'UTF-8') : ''; ?>">
             </div>
             <div>
                 <label for="name">Tedarikçi Adı</label>
-                <input type="text" id="name" name="name" placeholder="Örn. ABC Lojistik" required>
+                <input type="text" id="name" name="name" placeholder="Örn. ABC Lojistik" required value="<?php echo htmlspecialchars((string) $supplier['name'], ENT_QUOTES, 'UTF-8'); ?>">
             </div>
             <div>
                 <label for="address">Adres</label>
-                <textarea id="address" name="address" rows="2" placeholder="Cadde, Mahalle, Şehir" required></textarea>
+                <textarea id="address" name="address" rows="2" placeholder="Cadde, Mahalle, Şehir" required><?php echo htmlspecialchars((string) $supplier['address'], ENT_QUOTES, 'UTF-8'); ?></textarea>
             </div>
             <div>
                 <label for="email">E-posta</label>
-                <input type="email" id="email" name="email" placeholder="ornek@tedarikci.com" required>
+                <input type="email" id="email" name="email" placeholder="ornek@tedarikci.com" required value="<?php echo htmlspecialchars((string) $supplier['email'], ENT_QUOTES, 'UTF-8'); ?>">
             </div>
             <div>
                 <label for="website">Web Sitesi (Opsiyonel)</label>
-                <input type="url" id="website" name="website" placeholder="https://">
+                <input type="url" id="website" name="website" placeholder="https://" value="<?php echo htmlspecialchars((string) $supplier['website'], ENT_QUOTES, 'UTF-8'); ?>">
             </div>
             <div>
                 <label for="phonenumber">Telefon</label>
-                <input type="tel" id="phonenumber" name="phonenumber" placeholder="0 (5xx) xxx xx xx" required>
+                <input type="tel" id="phonenumber" name="phonenumber" placeholder="0 (5xx) xxx xx xx" required value="<?php echo htmlspecialchars((string) $supplier['phonenumber'], ENT_QUOTES, 'UTF-8'); ?>">
             </div>
             <div class="actions">
                 <button type="submit" class="primary">Bilgileri Güncelle</button>
                 <button type="reset">Temizle</button>
             </div>
         </form>
-        <div class="status" id="status"></div>
+        <div class="status<?php echo $statusClass !== '' ? ' ' . htmlspecialchars($statusClass, ENT_QUOTES, 'UTF-8') : ''; ?>" id="status"<?php echo $statusMessage === '' ? ' style="display: none;"' : ''; ?>><?php echo htmlspecialchars($statusMessage, ENT_QUOTES, 'UTF-8'); ?></div>
     </div>
 
     <script>
