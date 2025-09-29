@@ -441,7 +441,7 @@ $totalSuppliers = count($suppliers);
 
             if (addButton) {
                 addButton.addEventListener('click', () => {
-                    window.location.href = '/api/suppliers/add.php';
+                    window.location.href = 'api/suppliers/add.php';
                 });
             }
 
