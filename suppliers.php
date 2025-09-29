@@ -467,7 +467,7 @@ $totalSuppliers = count($suppliers);
 
                 if (editButton) {
                     editButton.addEventListener('click', () => {
-                        const targetUrl = new URL('api/suppliers/edit.php', window.location.origin);
+                        const targetUrl = new URL('api/suppliers/edit.php', window.location.href);
                         targetUrl.searchParams.set('id', String(supplierData.id));
 
                         window.location.href = targetUrl.toString();
