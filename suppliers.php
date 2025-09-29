@@ -360,57 +360,6 @@ $totalSuppliers = count($suppliers);
             const rows = document.querySelectorAll('[data-supplier-row]');
 
             /**
-             * @param {string} message
-             * @param {string} [defaultValue]
-             * @returns {string|null}
-             */
-            function promptField(message, defaultValue = '') {
-                const response = window.prompt(message, defaultValue);
-
-                if (response === null) {
-                    return null;
-                }
-
-                return response.trim();
-            }
-
-            /**
-             * Collect supplier data using prompt dialogs.
-             * @param {Record<string, string>} defaults
-             * @returns {Record<string, string>|null}
-             */
-            function collectSupplierData(defaults) {
-                const name = promptField('Tedarikçi adı', defaults.name || '');
-                if (!name) {
-                    return null;
-                }
-
-                const address = promptField('Adres', defaults.address || '');
-                if (!address) {
-                    return null;
-                }
-
-                const email = promptField('E-posta adresi', defaults.email || '');
-                if (!email) {
-                    return null;
-                }
-
-                const website = promptField('Web sitesi (isteğe bağlı)', defaults.website || '');
-                const phonenumber = promptField('Telefon numarası', defaults.phonenumber || '');
-                if (!phonenumber) {
-                    return null;
-                }
-
-                return {
-                    name,
-                    address,
-                    email,
-                    website,
-                    phonenumber,
-                };
-            }
-
-            /**
              * Execute a supplier API request.
              * @param {string} endpoint
              * @param {object} payload
