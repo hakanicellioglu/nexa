@@ -64,8 +64,19 @@ if (!function_exists('nexaHeaderStyles')) {
     }
 
     .nexa-nav a:hover,
-    .nexa-nav a:focus {
+    .nexa-nav a:focus,
+    .nexa-nav a.active {
         color: #FFFFFF;
+    }
+
+    .nexa-nav a.active::after {
+        content: "";
+        display: block;
+        margin-top: 0.35rem;
+        height: 3px;
+        border-radius: 999px;
+        background: #02A676;
+        box-shadow: 0 4px 10px rgba(2, 166, 118, 0.45);
     }
 
     .nexa-profile-dropdown {
@@ -177,6 +188,36 @@ if (!function_exists('renderNexaHeader')) {
 
         $profileLabel = $_SESSION['firstname'] ?? $_SESSION['username'] ?? 'Profil';
 
+        $currentScript = basename($_SERVER['SCRIPT_NAME'] ?? '');
+
+        $navItems = [
+            [
+                'label' => 'Kontrol Paneli',
+                'href' => 'dashboard.php',
+            ],
+            [
+                'label' => 'Ürünler',
+                'href' => 'products.php',
+            ],
+            [
+                'label' => 'Tedarikçiler',
+                'href' => 'suppliers.php',
+            ],
+        ];
+
+        $navLinks = array_map(
+            static function (array $item) use ($currentScript): string {
+                $href = htmlspecialchars($item['href'], ENT_QUOTES, 'UTF-8');
+                $label = htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8');
+                $isActive = strtolower($currentScript) === strtolower(basename($item['href']));
+                $class = 'nexa-nav-link' . ($isActive ? ' active' : '');
+                $ariaCurrent = $isActive ? ' aria-current="page"' : '';
+
+                return sprintf('<a class="%s" href="%s"%s>%s</a>', $class, $href, $ariaCurrent, $label);
+            },
+            $navItems
+        );
+
         echo sprintf(
             <<<'HTML'
 <header class="nexa-header">
@@ -185,11 +226,7 @@ if (!function_exists('renderNexaHeader')) {
         <div>Nexa Portal</div>
     </a>
     <nav class="nexa-nav" aria-label="Ana menü">
-        <a href="#urunler">Ürünler</a>
-        <a href="#fiyatlar">Fiyatlar</a>
-        <a href="suppliers.php">Tedarikçiler</a>
-        <a href="#projeler">Projeler</a>
-        <a href="#siparisler">Siparişler</a>
+        %s
     </nav>
     <details class="nexa-profile-dropdown">
         <summary>
@@ -206,6 +243,7 @@ if (!function_exists('renderNexaHeader')) {
     </details>
 </header>
 HTML,
+            implode("\n        ", $navLinks),
             htmlspecialchars($profileLabel, ENT_QUOTES, 'UTF-8')
         );
     }
