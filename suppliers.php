@@ -466,25 +466,11 @@ $totalSuppliers = count($suppliers);
                 const deleteButton = row.querySelector('[data-action="delete"]');
 
                 if (editButton) {
-                    editButton.addEventListener('click', async () => {
-                        const updated = collectSupplierData(supplierData);
-                        if (!updated) {
-                            return;
-                        }
+                    editButton.addEventListener('click', () => {
+                        const targetUrl = new URL('api/suppliers/edit.php', window.location.origin);
+                        targetUrl.searchParams.set('id', String(supplierData.id));
 
-                        editButton.disabled = true;
-
-                        try {
-                            await requestSupplier('api/suppliers/edit.php', {
-                                id: supplierData.id,
-                                ...updated,
-                            });
-                            window.location.reload();
-                        } catch (error) {
-                            window.alert(error instanceof Error ? error.message : 'Bir hata oluştu.');
-                        } finally {
-                            editButton.disabled = false;
-                        }
+                        window.location.href = targetUrl.toString();
                     });
                 }
 
