@@ -440,22 +440,8 @@ $totalSuppliers = count($suppliers);
             }
 
             if (addButton) {
-                addButton.addEventListener('click', async () => {
-                    const data = collectSupplierData({});
-                    if (!data) {
-                        return;
-                    }
-
-                    addButton.disabled = true;
-
-                    try {
-                        await requestSupplier('api/suppliers/add.php', data);
-                        window.location.reload();
-                    } catch (error) {
-                        window.alert(error instanceof Error ? error.message : 'Bir hata oluştu.');
-                    } finally {
-                        addButton.disabled = false;
-                    }
+                addButton.addEventListener('click', () => {
+                    window.location.href = '/api/suppliers/add.php';
                 });
             }
 
