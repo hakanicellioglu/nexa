@@ -222,6 +222,7 @@ $activityFeed = $buildActivityFeed((array)($dashboardData['activity_feed'] ?? []
             background: linear-gradient(180deg, rgba(59, 130, 246, 0.08), rgba(14, 165, 233, 0.08));
             color: var(--text-primary);
             font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 0.95rem;
         }
 
         .dashboard-layout {
@@ -247,14 +248,14 @@ $activityFeed = $buildActivityFeed((array)($dashboardData['activity_feed'] ?? []
         }
 
         .page-title {
-            font-size: clamp(2.2rem, 3vw, 3rem);
+            font-size: clamp(1.8rem, 2.6vw, 2.6rem);
             font-weight: var(--font-weight-bold);
             margin: 0;
         }
 
         .page-subtitle {
             margin: 0;
-            font-size: var(--font-size-lg);
+            font-size: var(--font-size-base);
             color: var(--text-secondary);
         }
 
@@ -285,7 +286,7 @@ $activityFeed = $buildActivityFeed((array)($dashboardData['activity_feed'] ?? []
         }
 
         .summary-card__label {
-            font-size: var(--font-size-sm);
+            font-size: var(--font-size-xs);
             letter-spacing: 0.08em;
             text-transform: uppercase;
             color: var(--text-tertiary);
@@ -293,7 +294,7 @@ $activityFeed = $buildActivityFeed((array)($dashboardData['activity_feed'] ?? []
         }
 
         .summary-card__value {
-            font-size: clamp(1.75rem, 4vw, 2.4rem);
+            font-size: clamp(1.4rem, 3.5vw, 2rem);
             font-weight: var(--font-weight-semibold);
             margin: 0;
             color: var(--text-primary);
@@ -301,7 +302,7 @@ $activityFeed = $buildActivityFeed((array)($dashboardData['activity_feed'] ?? []
 
         .summary-card__description {
             margin-top: var(--spacing-sm);
-            font-size: var(--font-size-sm);
+            font-size: var(--font-size-xs);
             color: var(--text-secondary);
         }
 
@@ -339,7 +340,7 @@ $activityFeed = $buildActivityFeed((array)($dashboardData['activity_feed'] ?? []
 
         .panel h2 {
             margin: 0;
-            font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+            font-size: clamp(1.2rem, 2vw, 1.6rem);
             font-weight: var(--font-weight-semibold);
         }
 
@@ -366,7 +367,7 @@ $activityFeed = $buildActivityFeed((array)($dashboardData['activity_feed'] ?? []
             color: inherit;
             text-decoration: none;
             font-weight: var(--font-weight-semibold);
-            font-size: var(--font-size-lg);
+            font-size: var(--font-size-base);
         }
 
         .quick-action:hover,
@@ -377,7 +378,7 @@ $activityFeed = $buildActivityFeed((array)($dashboardData['activity_feed'] ?? []
 
         .quick-action p {
             margin: 0;
-            font-size: var(--font-size-sm);
+            font-size: var(--font-size-xs);
             color: var(--text-secondary);
         }
 
@@ -400,14 +401,14 @@ $activityFeed = $buildActivityFeed((array)($dashboardData['activity_feed'] ?? []
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.85), rgba(14, 165, 233, 0.85));
             display: grid;
             place-items: center;
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: var(--font-weight-semibold);
             color: #fff;
         }
 
         .profile-summary__name {
             margin: 0;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: var(--font-weight-semibold);
         }
 
@@ -429,14 +430,14 @@ $activityFeed = $buildActivityFeed((array)($dashboardData['activity_feed'] ?? []
         }
 
         .profile-detail span:first-child {
-            font-size: var(--font-size-xs);
+            font-size: 0.7rem;
             letter-spacing: 0.08em;
             text-transform: uppercase;
             color: var(--text-tertiary);
         }
 
         .profile-detail span:last-child {
-            font-size: var(--font-size-lg);
+            font-size: var(--font-size-base);
             font-weight: var(--font-weight-medium);
         }
 
@@ -460,7 +461,7 @@ $activityFeed = $buildActivityFeed((array)($dashboardData['activity_feed'] ?? []
 
         .activity-item__time {
             min-width: 120px;
-            font-size: var(--font-size-xs);
+            font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.08em;
             color: var(--text-tertiary);
@@ -474,7 +475,7 @@ $activityFeed = $buildActivityFeed((array)($dashboardData['activity_feed'] ?? []
         .activity-item__description {
             margin: 0;
             color: var(--text-secondary);
-            font-size: var(--font-size-sm);
+            font-size: var(--font-size-xs);
         }
 
         @media (max-width: 1024px) {
