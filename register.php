@@ -95,6 +95,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
     }
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $acceptHeader = (string)($_SERVER['HTTP_ACCEPT'] ?? '');
+    $requestedWith = strtolower((string)($_SERVER['HTTP_X_REQUESTED_WITH'] ?? ''));
+
+    if (strpos($acceptHeader, 'application/json') !== false || $requestedWith === 'xmlhttprequest') {
+
+        header('Content-Type: application/json; charset=UTF-8');
+
+        if ($errors) {
+            http_response_code(422);
+            echo json_encode([
+                'success' => false,
+                'errors' => $errors,
+            ], JSON_UNESCAPED_UNICODE);
+        } else {
+            http_response_code(201);
+            echo json_encode([
+                'success' => true,
+                'message' => $successMessage,
+            ], JSON_UNESCAPED_UNICODE);
+        }
+
+        exit;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -221,23 +247,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <main class="auth-card" role="main">
         <h1 class="auth-title">Nexa</h1>
         <p class="auth-subtitle">Yeni hesabınızı oluşturun</p>
-        <?php if ($successMessage !== ''): ?>
-            <div class="alert success" role="alert">
-                <?= htmlspecialchars($successMessage, ENT_QUOTES, 'UTF-8'); ?>
-            </div>
-        <?php endif; ?>
+        <div class="alert success" role="alert" id="success-message" <?= $successMessage === '' ? 'hidden' : ''; ?>>
+            <span data-message><?= htmlspecialchars($successMessage, ENT_QUOTES, 'UTF-8'); ?></span>
+        </div>
 
-        <?php if ($errors): ?>
-            <div class="alert error" role="alert">
-                <ul>
-                    <?php foreach ($errors as $message): ?>
-                        <li><?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8'); ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-        <?php endif; ?>
+        <div class="alert error" role="alert" id="error-messages" <?= $errors ? '' : 'hidden'; ?>>
+            <ul>
+                <?php foreach ($errors as $message): ?>
+                    <li><?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8'); ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
 
-        <form action="<?= htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8'); ?>" method="post" novalidate>
+        <form action="<?= htmlspecialchars($_SERVER['PHP_SELF'], ENT_QUOTES, 'UTF-8'); ?>" method="post" novalidate data-async="true">
             <div class="form-group">
                 <label for="first_name">Ad</label>
                 <input type="text" name="first_name" id="first_name" placeholder="Adınızı girin" value="<?= htmlspecialchars($formData['first_name'], ENT_QUOTES, 'UTF-8'); ?>" required>
@@ -268,5 +290,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             Zaten hesabınız var mı? <a href="login.php">Giriş yapın</a>
         </p>
     </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.querySelector('form[data-async="true"]');
+
+            if (!form || typeof window.fetch !== 'function') {
+                return;
+            }
+
+            const successContainer = document.getElementById('success-message');
+            const successMessage = successContainer?.querySelector('[data-message]');
+            const errorContainer = document.getElementById('error-messages');
+            const errorList = errorContainer?.querySelector('ul');
+            const submitButton = form.querySelector('button[type="submit"]');
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                if (!errorList || !successContainer || !successMessage || !errorContainer || !submitButton) {
+                    form.submit();
+                    return;
+                }
+
+                successMessage.textContent = '';
+                successContainer.hidden = true;
+                errorList.innerHTML = '';
+                errorContainer.hidden = true;
+
+                if (!submitButton.dataset.originalText) {
+                    submitButton.dataset.originalText = submitButton.textContent.trim();
+                }
+
+                submitButton.disabled = true;
+                submitButton.textContent = 'Gönderiliyor...';
+
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        body: new FormData(form),
+                        headers: {
+                            'Accept': 'application/json',
+                        },
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        successMessage.textContent = result.message || 'Kayıt işlemi başarıyla tamamlandı.';
+                        successContainer.hidden = false;
+                        form.reset();
+                    } else if (result.errors) {
+                        Object.values(result.errors).forEach((message) => {
+                            const listItem = document.createElement('li');
+                            listItem.textContent = message;
+                            errorList.appendChild(listItem);
+                        });
+                        errorContainer.hidden = false;
+                    } else {
+                        throw new Error('Unexpected response structure');
+                    }
+                } catch (error) {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = 'İşlem sırasında bir hata oluştu. Lütfen tekrar deneyin.';
+                    errorList.appendChild(listItem);
+                    errorContainer.hidden = false;
+                } finally {
+                    submitButton.disabled = false;
+                    submitButton.textContent = submitButton.dataset.originalText || 'Kayıt Ol';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
