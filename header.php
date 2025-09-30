@@ -33,10 +33,12 @@ $guestLinks = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8'); ?></title>
+    <?php include __DIR__ . '/fonts/monoton.php'; ?>
     <style>
         body { font-family: Arial, sans-serif; margin: 0; background: #f9fafb; color: #111827; }
         header { background: #1f2937; color: #f9fafb; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
         header h1 { margin: 0; font-size: 1.5rem; white-space: nowrap; }
+        .brand-title { font-family: 'Monoton', cursive; font-size: 2rem; letter-spacing: 0.08em; }
         .header-actions { display: flex; align-items: center; gap: 16px; }
         nav { display: flex; gap: 16px; flex-wrap: wrap; }
         nav a { color: #f9fafb; text-decoration: none; font-weight: 600; }
@@ -50,7 +52,7 @@ $guestLinks = [
 </head>
 <body>
     <header>
-        <h1><?php echo htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8'); ?></h1>
+        <h1 class="brand-title">Nexa</h1>
         <div class="header-actions">
             <nav>
                 <?php foreach ($publicLinks as $link) : ?>
