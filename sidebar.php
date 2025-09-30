@@ -15,6 +15,7 @@ $publicLinks = [
 ];
 
 $authenticatedLinks = [
+    ['href' => 'dashboard.php', 'label' => 'Kontrol Paneli'],
     ['href' => 'suppliers.php', 'label' => 'Tedarikçiler'],
     ['href' => 'products.php', 'label' => 'Ürünler'],
     ['href' => 'projects.php', 'label' => 'Projeler'],
@@ -26,57 +27,134 @@ $guestLinks = [
     ['href' => 'login.php', 'label' => 'Giriş Yap'],
     ['href' => 'register.php', 'label' => 'Kayıt Ol'],
 ];
+
+$currentPage = basename($_SERVER['PHP_SELF'] ?? '');
+
+if (! defined('NEXA_MONOTON_FONT_LOADED')) {
+    include __DIR__ . '/fonts/monoton.php';
+    define('NEXA_MONOTON_FONT_LOADED', true);
+}
 ?>
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8'); ?></title>
-    <?php include __DIR__ . '/fonts/monoton.php'; ?>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; background: #f9fafb; color: #111827; }
-        header { background: #1f2937; color: #f9fafb; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
-        header h1 { margin: 0; font-size: 1.5rem; white-space: nowrap; }
-        .brand-title { font-family: 'Monoton', cursive; font-size: 2rem; letter-spacing: 0.08em; }
-        .header-actions { display: flex; align-items: center; gap: 16px; }
-        nav { display: flex; gap: 16px; flex-wrap: wrap; }
-        nav a { color: #f9fafb; text-decoration: none; font-weight: 600; }
-        nav a:hover { text-decoration: underline; }
-        .user-info { font-size: 0.95rem; white-space: nowrap; }
-        main { padding: 32px 24px; max-width: 960px; margin: 0 auto; }
-        a.button { display: inline-block; margin-top: 16px; padding: 10px 18px; background: #2563eb; color: #fff; text-decoration: none; border-radius: 6px; transition: background 0.2s ease; }
-        a.button:hover { background: #1d4ed8; }
-        .card { background: #fff; border-radius: 8px; padding: 24px; box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08); }
-    </style>
-</head>
-<body>
-    <header>
-        <h1 class="brand-title">Nexa</h1>
-        <div class="header-actions">
-            <nav>
-                <?php foreach ($publicLinks as $link) : ?>
-                    <a href="<?php echo htmlspecialchars($link['href'], ENT_QUOTES, 'UTF-8'); ?>">
-                        <?php echo htmlspecialchars($link['label'], ENT_QUOTES, 'UTF-8'); ?>
-                    </a>
-                <?php endforeach; ?>
-                <?php if ($isAuthenticated) : ?>
-                    <?php foreach ($authenticatedLinks as $link) : ?>
-                        <a href="<?php echo htmlspecialchars($link['href'], ENT_QUOTES, 'UTF-8'); ?>">
-                            <?php echo htmlspecialchars($link['label'], ENT_QUOTES, 'UTF-8'); ?>
-                        </a>
-                    <?php endforeach; ?>
-                <?php else : ?>
-                    <?php foreach ($guestLinks as $link) : ?>
-                        <a href="<?php echo htmlspecialchars($link['href'], ENT_QUOTES, 'UTF-8'); ?>">
-                            <?php echo htmlspecialchars($link['label'], ENT_QUOTES, 'UTF-8'); ?>
-                        </a>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </nav>
-            <?php if ($userFullName !== '') : ?>
-                <div class="user-info">Merhaba, <?php echo htmlspecialchars($userFullName, ENT_QUOTES, 'UTF-8'); ?></div>
-            <?php endif; ?>
-        </div>
-    </header>
-    <main>
+
+<style>
+    .sidebar {
+        width: 260px;
+        min-height: 100vh;
+        background: #111827;
+        color: #f9fafb;
+        display: flex;
+        flex-direction: column;
+        padding: 24px 20px;
+        box-sizing: border-box;
+    }
+
+    .sidebar .brand-title {
+        font-family: 'Monoton', cursive;
+        font-size: 2rem;
+        letter-spacing: 0.08em;
+        margin-bottom: 32px;
+    }
+
+    .sidebar .user-info {
+        font-size: 0.95rem;
+        margin-bottom: 24px;
+        color: #d1d5db;
+    }
+
+    .sidebar nav {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .sidebar nav .nav-section-title {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #9ca3af;
+        margin-top: 24px;
+        margin-bottom: 8px;
+    }
+
+    .sidebar nav a {
+        color: #f9fafb;
+        text-decoration: none;
+        padding: 10px 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        display: block;
+        transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .sidebar nav a:hover {
+        background: rgba(59, 130, 246, 0.25);
+    }
+
+    .sidebar nav a.active {
+        background: #2563eb;
+    }
+
+    .sidebar .auth-actions {
+        margin-top: 32px;
+    }
+
+    .sidebar .auth-actions a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 10px 12px;
+        background: #2563eb;
+        border-radius: 8px;
+        color: #fff;
+        text-decoration: none;
+        font-weight: 600;
+        transition: background 0.2s ease;
+    }
+
+    .sidebar .auth-actions a:hover {
+        background: #1d4ed8;
+    }
+</style>
+
+<aside class="sidebar">
+    <div class="brand-title">Nexa</div>
+
+    <?php if ($userFullName !== '') : ?>
+        <div class="user-info">Merhaba, <?php echo htmlspecialchars($userFullName, ENT_QUOTES, 'UTF-8'); ?></div>
+    <?php endif; ?>
+
+    <nav>
+        <?php foreach ($publicLinks as $link) :
+            $isActive = $currentPage === basename($link['href']);
+            ?>
+            <a href="<?php echo htmlspecialchars($link['href'], ENT_QUOTES, 'UTF-8'); ?>" class="<?php echo $isActive ? 'active' : ''; ?>">
+                <?php echo htmlspecialchars($link['label'], ENT_QUOTES, 'UTF-8'); ?>
+            </a>
+        <?php endforeach; ?>
+
+        <?php if ($isAuthenticated) : ?>
+            <div class="nav-section-title">Yönetim</div>
+            <?php foreach ($authenticatedLinks as $link) :
+                $isActive = $currentPage === basename($link['href']);
+                ?>
+                <a href="<?php echo htmlspecialchars($link['href'], ENT_QUOTES, 'UTF-8'); ?>" class="<?php echo $isActive ? 'active' : ''; ?>">
+                    <?php echo htmlspecialchars($link['label'], ENT_QUOTES, 'UTF-8'); ?>
+                </a>
+            <?php endforeach; ?>
+            <div class="auth-actions">
+                <a href="logout.php">Çıkış Yap</a>
+            </div>
+        <?php else : ?>
+            <div class="nav-section-title">Hesap</div>
+            <?php foreach ($guestLinks as $link) :
+                $isActive = $currentPage === basename($link['href']);
+                ?>
+                <a href="<?php echo htmlspecialchars($link['href'], ENT_QUOTES, 'UTF-8'); ?>" class="<?php echo $isActive ? 'active' : ''; ?>">
+                    <?php echo htmlspecialchars($link['label'], ENT_QUOTES, 'UTF-8'); ?>
+                </a>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </nav>
+</aside>
