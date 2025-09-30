@@ -119,6 +119,17 @@ $escape = static fn(string $value): string => htmlspecialchars($value, ENT_QUOTE
             color: var(--text-primary);
             display: flex;
             min-height: 100vh;
+            position: relative;
+        }
+
+        body.sidebar-collapsed .sidebar {
+            transform: translateX(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        body.sidebar-collapsed .sidebar-toggle {
+            left: var(--spacing-lg);
         }
 
         .sidebar {
@@ -130,6 +141,66 @@ $escape = static fn(string $value): string => htmlspecialchars($value, ENT_QUOTE
             padding: var(--spacing-xl);
             gap: var(--spacing-xl);
             box-shadow: var(--shadow-md);
+            transition: transform var(--transition-fast), opacity var(--transition-fast);
+        }
+
+        .sidebar-toggle {
+            position: fixed;
+            top: var(--spacing-lg);
+            left: calc(min(320px, 80vw) + var(--spacing-lg));
+            z-index: 100;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-secondary);
+            background-color: var(--surface-primary);
+            color: inherit;
+            cursor: pointer;
+            font: inherit;
+            box-shadow: var(--shadow-sm);
+            transition: background-color var(--transition-fast), transform var(--transition-fast);
+        }
+
+        .sidebar-toggle:hover,
+        .sidebar-toggle:focus-visible {
+            background-color: var(--surface-secondary);
+            outline: none;
+            transform: translateY(-1px);
+        }
+
+        .sidebar-toggle-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            line-height: 1;
+            min-width: 1.5rem;
+        }
+
+        .sidebar-toggle-icon .icon-open {
+            display: none;
+        }
+
+        body.sidebar-collapsed .sidebar-toggle-icon .icon-open {
+            display: inline;
+        }
+
+        body.sidebar-collapsed .sidebar-toggle-icon .icon-close {
+            display: none;
+        }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
         }
 
         .brand {
@@ -387,7 +458,15 @@ $escape = static fn(string $value): string => htmlspecialchars($value, ENT_QUOTE
     </style>
 </head>
 <body>
-    <aside class="sidebar" aria-label="Ana menü">
+    <button type="button" class="sidebar-toggle" aria-expanded="true" aria-controls="nexa-sidebar" aria-label="Menüyü Gizle">
+        <span class="sidebar-toggle-icon" aria-hidden="true">
+            <span class="icon-open" aria-hidden="true">☰</span>
+            <span class="icon-close" aria-hidden="true">✕</span>
+        </span>
+        <span class="visually-hidden sidebar-toggle-text">Menüyü Gizle</span>
+    </button>
+
+    <aside id="nexa-sidebar" class="sidebar" aria-label="Ana menü">
         <header class="brand">
             <div class="brand-logo" aria-hidden="true">N</div>
             <div class="brand-name">
@@ -497,10 +576,42 @@ $escape = static fn(string $value): string => htmlspecialchars($value, ENT_QUOTE
     </aside>
 
     <script>
+        const body = document.body;
+        const sidebar = document.querySelector('#nexa-sidebar');
+        const sidebarToggle = document.querySelector('.sidebar-toggle');
         const profileActions = document.querySelector('.profile-actions');
         const toggleButton = document.querySelector('.dropdown-toggle');
         const dropdownMenu = document.querySelector('.dropdown-menu');
         const navSubmenus = document.querySelectorAll('details.nav-submenu');
+
+        const toggleText = sidebarToggle ? sidebarToggle.querySelector('.sidebar-toggle-text') : null;
+
+        function updateToggleLabel(isCollapsed) {
+            const label = isCollapsed ? 'Menüyü Göster' : 'Menüyü Gizle';
+            if (sidebarToggle) {
+                sidebarToggle.setAttribute('aria-label', label);
+            }
+
+            if (toggleText) {
+                toggleText.textContent = label;
+            }
+        }
+
+        if (sidebar && sidebarToggle) {
+            sidebarToggle.addEventListener('click', () => {
+                const isCollapsed = body.classList.toggle('sidebar-collapsed');
+                sidebarToggle.setAttribute('aria-expanded', String(!isCollapsed));
+                updateToggleLabel(isCollapsed);
+
+                if (!isCollapsed && typeof sidebar.focus === 'function') {
+                    sidebar.setAttribute('tabindex', '-1');
+                    sidebar.focus({ preventScroll: true });
+                    sidebar.removeAttribute('tabindex');
+                }
+            });
+
+            updateToggleLabel(body.classList.contains('sidebar-collapsed'));
+        }
 
         function closeDropdown(event) {
             if (!profileActions.contains(event.target)) {
