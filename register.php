@@ -104,8 +104,16 @@
         <p class="auth-subtitle">Yeni hesabınızı oluşturun</p>
         <form action="#" method="post" novalidate>
             <div class="form-group">
-                <label for="name">Ad Soyad</label>
-                <input type="text" name="name" id="name" placeholder="Adınızı girin" required>
+                <label for="first_name">Ad</label>
+                <input type="text" name="first_name" id="first_name" placeholder="Adınızı girin" required>
+            </div>
+            <div class="form-group">
+                <label for="last_name">Soyad</label>
+                <input type="text" name="last_name" id="last_name" placeholder="Soyadınızı girin" required>
+            </div>
+            <div class="form-group">
+                <label for="username">Kullanıcı Adı</label>
+                <input type="text" name="username" id="username" placeholder="Kullanıcı adınızı girin" required>
             </div>
             <div class="form-group">
                 <label for="email">E-posta</label>
