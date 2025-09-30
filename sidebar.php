@@ -126,22 +126,6 @@ $guestLinks = [
             border-radius: 10px;
         }
 
-        .sidebar-shortcut-hint {
-            font-size: 0.8rem;
-            color: rgba(249, 250, 251, 0.75);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .sidebar-shortcut-hint .hint-key {
-            border: 1px solid rgba(249, 250, 251, 0.3);
-            border-radius: 6px;
-            padding: 4px 6px;
-            font-size: 0.75rem;
-            line-height: 1;
-        }
-
         main.main-content {
             display: block;
             padding: 48px 36px;
@@ -204,66 +188,20 @@ $guestLinks = [
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const body = document.body;
-            const STORAGE_KEY = 'nexa-sidebar-collapsed';
-
-            const setSidebarState = function (collapsed, persist = true) {
+            const setSidebarState = function (collapsed) {
                 body.classList.toggle('sidebar-collapsed', collapsed);
                 body.setAttribute('data-sidebar', collapsed ? 'collapsed' : 'open');
-
-                if (!persist) {
-                    return;
-                }
-
-                try {
-                    window.localStorage.setItem(STORAGE_KEY, collapsed ? '1' : '0');
-                } catch (error) {
-                    // Ignore storage errors (e.g. in private mode)
-                }
             };
 
-            const loadStoredState = function () {
-                try {
-                    return window.localStorage.getItem(STORAGE_KEY);
-                } catch (error) {
-                    return null;
-                }
+            const applyResponsiveState = function () {
+                const shouldCollapse = window.innerWidth <= 768;
+                setSidebarState(shouldCollapse);
             };
 
-            const storedState = loadStoredState();
-            const hasStoredState = storedState === '1' || storedState === '0';
-
-            if (hasStoredState) {
-                setSidebarState(storedState === '1', false);
-            } else if (window.innerWidth <= 768) {
-                setSidebarState(true, false);
-            } else {
-                setSidebarState(false, false);
-            }
-
-            const toggleSidebar = function () {
-                const collapsed = body.classList.contains('sidebar-collapsed');
-                setSidebarState(!collapsed);
-            };
-
-            document.addEventListener('keydown', function (event) {
-                if (!event.ctrlKey) {
-                    return;
-                }
-
-                if (event.target && (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA' || event.target.isContentEditable)) {
-                    return;
-                }
-
-                if (event.key === '<' || event.key === ',' || event.code === 'Comma') {
-                    event.preventDefault();
-                    toggleSidebar();
-                }
-            });
+            applyResponsiveState();
 
             window.addEventListener('resize', function () {
-                if (!hasStoredState && window.innerWidth > 1024 && body.classList.contains('sidebar-collapsed')) {
-                    setSidebarState(false, false);
-                }
+                applyResponsiveState();
             });
         });
     </script>
@@ -295,11 +233,6 @@ $guestLinks = [
                 </div>
             <?php endif; ?>
         </nav>
-        <div class="sidebar-shortcut-hint" aria-hidden="true">
-            <span class="hint-key">Ctrl</span>
-            <span>+</span>
-            <span class="hint-key">&lt;</span>
-        </div>
         <?php if ($userFullName !== '') : ?>
             <div class="sidebar-user">Merhaba, <?php echo htmlspecialchars($userFullName, ENT_QUOTES, 'UTF-8'); ?></div>
         <?php endif; ?>
