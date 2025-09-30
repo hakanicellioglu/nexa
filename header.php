@@ -9,6 +9,30 @@ if (isset($_SESSION['firstname'], $_SESSION['lastname'])) {
     $userFullName = trim($_SESSION['firstname'] . ' ' . $_SESSION['lastname']);
 }
 $isAuthenticated = isset($_SESSION['user_id']);
+
+$publicLinks = [
+    ['href' => 'index.php', 'label' => 'Ana Sayfa'],
+];
+
+$authenticatedLinks = [
+    ['href' => 'dashboard.php', 'label' => 'Kontrol Paneli'],
+    ['href' => 'users.php', 'label' => 'Kullanıcılar'],
+    ['href' => 'suppliers.php', 'label' => 'Tedarikçiler'],
+    ['href' => 'products.php', 'label' => 'Ürünler'],
+    ['href' => 'projects.php', 'label' => 'Projeler'],
+    ['href' => 'price.php', 'label' => 'Fiyatlar'],
+    ['href' => 'orders.php', 'label' => 'Siparişler'],
+    ['href' => 'order_items.php', 'label' => 'Sipariş Kalemleri'],
+    ['href' => 'company.php', 'label' => 'Şirket Bilgileri'],
+    ['href' => 'company_ibans.php', 'label' => 'Şirket IBANları'],
+    ['href' => 'company_descriptions.php', 'label' => 'Şirket Açıklamaları'],
+    ['href' => 'logs.php', 'label' => 'Log Kayıtları'],
+];
+
+$guestLinks = [
+    ['href' => 'login.php', 'label' => 'Giriş Yap'],
+    ['href' => 'register.php', 'label' => 'Kayıt Ol'],
+];
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -21,7 +45,7 @@ $isAuthenticated = isset($_SESSION['user_id']);
         header { background: #1f2937; color: #f9fafb; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
         header h1 { margin: 0; font-size: 1.5rem; white-space: nowrap; }
         .header-actions { display: flex; align-items: center; gap: 16px; }
-        nav { display: flex; gap: 16px; }
+        nav { display: flex; gap: 16px; flex-wrap: wrap; }
         nav a { color: #f9fafb; text-decoration: none; font-weight: 600; }
         nav a:hover { text-decoration: underline; }
         .user-info { font-size: 0.95rem; white-space: nowrap; }
@@ -36,12 +60,23 @@ $isAuthenticated = isset($_SESSION['user_id']);
         <h1><?php echo htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8'); ?></h1>
         <div class="header-actions">
             <nav>
-                <a href="index.php">Ana Sayfa</a>
+                <?php foreach ($publicLinks as $link) : ?>
+                    <a href="<?php echo htmlspecialchars($link['href'], ENT_QUOTES, 'UTF-8'); ?>">
+                        <?php echo htmlspecialchars($link['label'], ENT_QUOTES, 'UTF-8'); ?>
+                    </a>
+                <?php endforeach; ?>
                 <?php if ($isAuthenticated) : ?>
-                    <a href="dashboard.php">Kontrol Paneli</a>
+                    <?php foreach ($authenticatedLinks as $link) : ?>
+                        <a href="<?php echo htmlspecialchars($link['href'], ENT_QUOTES, 'UTF-8'); ?>">
+                            <?php echo htmlspecialchars($link['label'], ENT_QUOTES, 'UTF-8'); ?>
+                        </a>
+                    <?php endforeach; ?>
                 <?php else : ?>
-                    <a href="login.php">Giriş Yap</a>
-                    <a href="register.php">Kayıt Ol</a>
+                    <?php foreach ($guestLinks as $link) : ?>
+                        <a href="<?php echo htmlspecialchars($link['href'], ENT_QUOTES, 'UTF-8'); ?>">
+                            <?php echo htmlspecialchars($link['label'], ENT_QUOTES, 'UTF-8'); ?>
+                        </a>
+                    <?php endforeach; ?>
                 <?php endif; ?>
             </nav>
             <?php if ($userFullName !== '') : ?>
