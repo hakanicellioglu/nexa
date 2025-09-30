@@ -262,6 +262,7 @@ $activityFeed = $buildActivityFeed((array)($dashboardData['activity_feed'] ?? []
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: var(--spacing-xl);
+            align-items: stretch;
         }
 
         .summary-card {
@@ -271,6 +272,10 @@ $activityFeed = $buildActivityFeed((array)($dashboardData['activity_feed'] ?? []
             border: 1px solid rgba(59, 130, 246, 0.25);
             box-shadow: 0 20px 50px -25px rgba(15, 23, 42, 0.35);
             transition: transform 200ms ease, box-shadow 200ms ease;
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .summary-card:hover,
@@ -342,6 +347,7 @@ $activityFeed = $buildActivityFeed((array)($dashboardData['activity_feed'] ?? []
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: var(--spacing-lg);
+            align-items: stretch;
         }
 
         .quick-action {
@@ -353,6 +359,7 @@ $activityFeed = $buildActivityFeed((array)($dashboardData['activity_feed'] ?? []
             flex-direction: column;
             gap: var(--spacing-sm);
             transition: border-color 200ms ease, background 200ms ease;
+            min-height: 170px;
         }
 
         .quick-action a {
