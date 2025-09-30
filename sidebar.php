@@ -118,6 +118,7 @@ $username = $_SESSION['username'] ?? 'kullanici';
         width: 100%;
         max-width: 280px;
         position: relative;
+        font-size: 0.95rem;
     }
 
     .profile-avatar {
@@ -127,11 +128,25 @@ $username = $_SESSION['username'] ?? 'kullanici';
         font-size: 1.5rem;
     }
 
+    .sidebar-header p {
+        font-size: 0.85rem;
+    }
+
+    .nav-group h2 {
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+    }
+
+    .profile-section .fw-semibold {
+        font-size: 0.95rem;
+    }
+
     .nav-link {
         color: #343a40;
         padding: 0.75rem 1rem;
         border-radius: 0.75rem;
         transition: background-color 0.2s ease, color 0.2s ease;
+        font-size: 0.9rem;
     }
 
     .nav-link:hover,
@@ -158,7 +173,7 @@ $username = $_SESSION['username'] ?? 'kullanici';
 
     .submenu .nav-link {
         padding-left: 0.5rem;
-        font-size: 0.95rem;
+        font-size: 0.85rem;
     }
 
     .submenu-toggle {
@@ -167,6 +182,7 @@ $username = $_SESSION['username'] ?? 'kullanici';
         padding: 0.75rem 1rem;
         text-align: left;
         color: #343a40;
+        font-size: 0.9rem;
     }
 
     .submenu-toggle:hover,
