@@ -18,8 +18,13 @@ $formData = [
     'email' => '',
     'remember' => false,
 ];
+$isJsonRequest = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $acceptHeader = (string)($_SERVER['HTTP_ACCEPT'] ?? '');
+    $requestedWith = strtolower((string)($_SERVER['HTTP_X_REQUESTED_WITH'] ?? ''));
+    $isJsonRequest = strpos($acceptHeader, 'application/json') !== false || $requestedWith === 'xmlhttprequest';
+
     $formData['email'] = trim((string)($_POST['email'] ?? ''));
     $formData['remember'] = isset($_POST['remember']);
     $password = (string)($_POST['password'] ?? '');
@@ -59,11 +64,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $_SESSION['flash'][] = 'Başarıyla giriş yaptınız.';
 
+            if ($isJsonRequest) {
+                header('Content-Type: application/json; charset=UTF-8');
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Başarıyla giriş yaptınız.',
+                    'redirect' => 'dashboard.php',
+                ], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+
             header('Location: dashboard.php');
             exit;
         }
 
         $generalError = 'E-posta veya şifre hatalı.';
+    }
+
+    if ($isJsonRequest) {
+        header('Content-Type: application/json; charset=UTF-8');
+
+        if ($errors) {
+            http_response_code(422);
+            echo json_encode([
+                'success' => false,
+                'errors' => $errors,
+            ], JSON_UNESCAPED_UNICODE);
+        } else {
+            http_response_code(401);
+            echo json_encode([
+                'success' => false,
+                'message' => $generalError !== '' ? $generalError : 'Giriş işlemi tamamlanamadı.',
+            ], JSON_UNESCAPED_UNICODE);
+        }
+
+        exit;
     }
 }
 
@@ -208,25 +243,19 @@ function e(string $value): string
     <main class="auth-card" role="main">
         <h1 class="auth-title">Nexa</h1>
         <p class="auth-subtitle">Hesabınıza giriş yapın</p>
-        <?php if ($generalError !== ''): ?>
-            <div class="alert alert-error" role="alert">
-                <?php echo e($generalError); ?>
-            </div>
-        <?php endif; ?>
-        <form action="" method="post" novalidate>
+        <div id="general-error" class="alert alert-error" role="alert" <?php echo $generalError === '' ? 'hidden' : ''; ?>>
+            <span data-message><?php echo e($generalError); ?></span>
+        </div>
+        <form action="" method="post" novalidate data-async="true">
             <div class="form-group">
                 <label for="email">E-posta</label>
                 <input type="email" name="email" id="email" placeholder="ornek@nexa.com" value="<?php echo e($formData['email']); ?>" required>
-                <?php if (isset($errors['email'])): ?>
-                    <p class="field-error"><?php echo e($errors['email']); ?></p>
-                <?php endif; ?>
+                <p class="field-error" data-error-for="email" <?php echo isset($errors['email']) ? '' : 'hidden'; ?>><?php echo isset($errors['email']) ? e($errors['email']) : ''; ?></p>
             </div>
             <div class="form-group">
                 <label for="password">Şifre</label>
                 <input type="password" name="password" id="password" placeholder="Şifrenizi girin" required>
-                <?php if (isset($errors['password'])): ?>
-                    <p class="field-error"><?php echo e($errors['password']); ?></p>
-                <?php endif; ?>
+                <p class="field-error" data-error-for="password" <?php echo isset($errors['password']) ? '' : 'hidden'; ?>><?php echo isset($errors['password']) ? e($errors['password']) : ''; ?></p>
             </div>
             <div class="form-options">
                 <label>
@@ -240,6 +269,99 @@ function e(string $value): string
         <p class="auth-footer">
             Hesabınız yok mu? <a href="register.php">Hemen kaydolun</a>
         </p>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.querySelector('form[data-async="true"]');
+
+            if (!form || typeof window.fetch !== 'function') {
+                return;
+            }
+
+            const submitButton = form.querySelector('button[type="submit"]');
+            const generalError = document.getElementById('general-error');
+            const generalErrorMessage = generalError ? generalError.querySelector('[data-message]') || generalError : null;
+            const fieldErrors = {};
+
+            form.querySelectorAll('[data-error-for]').forEach((element) => {
+                const fieldName = element.getAttribute('data-error-for');
+
+                if (fieldName) {
+                    fieldErrors[fieldName] = element;
+                }
+            });
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                Object.values(fieldErrors).forEach((element) => {
+                    element.textContent = '';
+                    element.hidden = true;
+                });
+
+                if (generalError && generalErrorMessage) {
+                    generalErrorMessage.textContent = '';
+                    generalError.hidden = true;
+                }
+
+                if (submitButton) {
+                    if (!submitButton.dataset.originalText) {
+                        submitButton.dataset.originalText = submitButton.textContent.trim();
+                    }
+
+                    submitButton.disabled = true;
+                    submitButton.textContent = 'Gönderiliyor...';
+                }
+
+                try {
+                    const response = await fetch(form.action || window.location.href, {
+                        method: 'POST',
+                        body: new FormData(form),
+                        headers: {
+                            'Accept': 'application/json',
+                        },
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        if (result.redirect) {
+                            window.location.href = result.redirect;
+                            return;
+                        }
+
+                        window.location.reload();
+                        return;
+                    }
+
+                    if (result.errors && typeof result.errors === 'object') {
+                        Object.entries(result.errors).forEach(([field, message]) => {
+                            const errorElement = fieldErrors[field];
+
+                            if (errorElement) {
+                                errorElement.textContent = message;
+                                errorElement.hidden = false;
+                            }
+                        });
+                    }
+
+                    if (result.message && generalError && generalErrorMessage) {
+                        generalErrorMessage.textContent = result.message;
+                        generalError.hidden = false;
+                    }
+                } catch (error) {
+                    if (generalError && generalErrorMessage) {
+                        generalErrorMessage.textContent = 'İşlem sırasında bir hata oluştu. Lütfen tekrar deneyin.';
+                        generalError.hidden = false;
+                    }
+                } finally {
+                    if (submitButton) {
+                        submitButton.disabled = false;
+                        submitButton.textContent = submitButton.dataset.originalText || 'Giriş Yap';
+                    }
+                }
+            });
+        });
+    </script>
     </main>
 </body>
 </html>
