@@ -15,18 +15,11 @@ $publicLinks = [
 ];
 
 $authenticatedLinks = [
-    ['href' => 'dashboard.php', 'label' => 'Kontrol Paneli'],
-    ['href' => 'users.php', 'label' => 'Kullanıcılar'],
     ['href' => 'suppliers.php', 'label' => 'Tedarikçiler'],
     ['href' => 'products.php', 'label' => 'Ürünler'],
     ['href' => 'projects.php', 'label' => 'Projeler'],
     ['href' => 'price.php', 'label' => 'Fiyatlar'],
     ['href' => 'orders.php', 'label' => 'Siparişler'],
-    ['href' => 'order_items.php', 'label' => 'Sipariş Kalemleri'],
-    ['href' => 'company.php', 'label' => 'Şirket Bilgileri'],
-    ['href' => 'company_ibans.php', 'label' => 'Şirket IBANları'],
-    ['href' => 'company_descriptions.php', 'label' => 'Şirket Açıklamaları'],
-    ['href' => 'logs.php', 'label' => 'Log Kayıtları'],
 ];
 
 $guestLinks = [
