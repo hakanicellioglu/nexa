@@ -116,7 +116,6 @@ if (!empty($_SESSION['flash']) && is_array($_SESSION['flash'])) {
 
         .dashboard-header p {
             color: var(--text-secondary);
-            max-width: 520px;
         }
 
         .flash-messages {
