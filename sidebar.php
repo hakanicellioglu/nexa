@@ -8,6 +8,11 @@ if (!defined('MONOTON_FONT_INCLUDED')) {
     define('MONOTON_FONT_INCLUDED', true);
 }
 
+if (!defined('BOOTSTRAP_CDN_INCLUDED')) {
+    include __DIR__ . '/cdn/bootstrap.php';
+    define('BOOTSTRAP_CDN_INCLUDED', true);
+}
+
 if (!defined('BOOTSTRAP_ICONS_INCLUDED')) {
     echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">';
     define('BOOTSTRAP_ICONS_INCLUDED', true);
