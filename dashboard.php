@@ -41,10 +41,13 @@ if ($sidebarStyles !== '') {
 }
 
 $sidebarMarkup = $sidebarData['body'];
+$sidebarScripts = '';
 
 if ($sidebarMarkup !== '') {
-    if (preg_match('/<script\b[^>]*>.*?<\/script>/si', $sidebarMarkup, $scriptMatches)) {
-        $sidebarMarkup = trim(str_replace($scriptMatches[0], '', $sidebarMarkup));
+    $scriptMatches = [];
+    if (preg_match_all('/<script\b[^>]*>.*?<\/script>/si', $sidebarMarkup, $scriptMatches)) {
+        $sidebarScripts = trim(implode("\n", $scriptMatches[0]));
+        $sidebarMarkup = trim(preg_replace('/<script\b[^>]*>.*?<\/script>/si', '', $sidebarMarkup));
     }
 }
 
@@ -239,6 +242,9 @@ if (!empty($_SESSION['flash']) && is_array($_SESSION['flash'])) {
             </section>
         </main>
     </div>
+    <?php if ($sidebarScripts !== ''): ?>
+        <?= $sidebarScripts ?>
+    <?php endif; ?>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const dropdownToggle = document.querySelector('.dropdown-toggle');
