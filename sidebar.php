@@ -4,9 +4,42 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 $pageTitle = isset($pageTitle) && $pageTitle !== '' ? $pageTitle : 'Nexa';
+$userFirstName = trim($_SESSION['firstname'] ?? '');
+$userLastName = trim($_SESSION['lastname'] ?? '');
+$username = trim($_SESSION['username'] ?? '');
+$stringFragment = static function (string $value, int $start, ?int $length = null): string {
+    if ($value === '') {
+        return '';
+    }
+
+    if (function_exists('mb_substr')) {
+        return $length === null
+            ? mb_substr($value, $start, null, 'UTF-8')
+            : mb_substr($value, $start, $length, 'UTF-8');
+    }
+
+    return $length === null
+        ? substr($value, $start)
+        : substr($value, $start, $length);
+};
 $userFullName = '';
-if (isset($_SESSION['firstname'], $_SESSION['lastname'])) {
-    $userFullName = trim($_SESSION['firstname'] . ' ' . $_SESSION['lastname']);
+if ($userFirstName !== '' || $userLastName !== '') {
+    $userFullName = trim($userFirstName . ' ' . $userLastName);
+}
+$profileInitials = '';
+if ($userFirstName !== '' && $userLastName !== '') {
+    $profileInitials = $stringFragment($userFirstName, 0, 1) . $stringFragment($userLastName, 0, 1);
+} elseif ($userFirstName !== '') {
+    $profileInitials = $stringFragment($userFirstName, 0, 2);
+} elseif ($userLastName !== '') {
+    $profileInitials = $stringFragment($userLastName, 0, 2);
+} elseif ($username !== '') {
+    $profileInitials = $stringFragment($username, 0, 2);
+}
+if ($profileInitials !== '') {
+    $profileInitials = function_exists('mb_strtoupper')
+        ? mb_strtoupper($profileInitials, 'UTF-8')
+        : strtoupper($profileInitials);
 }
 $isAuthenticated = isset($_SESSION['user_id']);
 
@@ -89,12 +122,32 @@ $guestLinks = [
         .sidebar-nav {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 20px;
             margin: 0;
             padding: 0;
         }
 
-        .sidebar-nav a {
+        .sidebar-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sidebar-group-title {
+            margin: 0;
+            font-size: 0.75rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(249, 250, 251, 0.65);
+        }
+
+        .sidebar-group-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sidebar-group-links a {
             display: inline-flex;
             align-items: center;
             gap: 8px;
@@ -106,24 +159,107 @@ $guestLinks = [
             transition: background 0.2s ease, color 0.2s ease;
         }
 
-        .sidebar-nav a:hover,
-        .sidebar-nav a:focus-visible {
+        .sidebar-group-links a:hover,
+        .sidebar-group-links a:focus-visible {
             background: rgba(255, 255, 255, 0.15);
             outline: none;
         }
 
-        .sidebar-section {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+        .sidebar-profile-wrapper {
+            margin-top: auto;
+            position: relative;
         }
 
-        .sidebar-user {
-            margin-top: auto;
-            font-size: 0.95rem;
-            background: rgba(255, 255, 255, 0.08);
+        .sidebar-profile {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
             padding: 12px 14px;
-            border-radius: 10px;
+            border-radius: 12px;
+            border: none;
+            background: rgba(255, 255, 255, 0.08);
+            color: inherit;
+            cursor: pointer;
+            font: inherit;
+            text-align: left;
+            transition: background 0.2s ease;
+        }
+
+        .sidebar-profile:hover,
+        .sidebar-profile:focus-visible {
+            background: rgba(255, 255, 255, 0.16);
+            outline: none;
+        }
+
+        .sidebar-profile-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.18);
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .sidebar-profile-info {
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .sidebar-profile-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sidebar-profile-username {
+            font-size: 0.8rem;
+            color: rgba(249, 250, 251, 0.65);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sidebar-profile-caret {
+            margin-left: auto;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .sidebar-profile-menu {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: calc(100% + 8px);
+            background: #111827;
+            border-radius: 12px;
+            box-shadow: 0 18px 35px rgba(15, 23, 42, 0.35);
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-profile-menu a {
+            padding: 10px 12px;
+            border-radius: 8px;
+            color: inherit;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background 0.2s ease;
+        }
+
+        .sidebar-profile-menu a:hover,
+        .sidebar-profile-menu a:focus-visible {
+            background: rgba(255, 255, 255, 0.12);
+            outline: none;
         }
 
         main.main-content {
@@ -203,6 +339,46 @@ $guestLinks = [
             window.addEventListener('resize', function () {
                 applyResponsiveState();
             });
+
+            const profileButton = document.getElementById('sidebarProfileButton');
+            const profileMenu = document.getElementById('sidebarProfileMenu');
+
+            if (profileButton && profileMenu) {
+                const closeMenu = function () {
+                    profileButton.setAttribute('aria-expanded', 'false');
+                    profileMenu.hidden = true;
+                };
+
+                profileButton.addEventListener('click', function (event) {
+                    event.stopPropagation();
+                    const isExpanded = profileButton.getAttribute('aria-expanded') === 'true';
+                    if (isExpanded) {
+                        closeMenu();
+                    } else {
+                        profileButton.setAttribute('aria-expanded', 'true');
+                        profileMenu.hidden = false;
+                        const firstMenuItem = profileMenu.querySelector('[role="menuitem"]');
+                        if (firstMenuItem && event.detail === 0) {
+                            firstMenuItem.focus();
+                        }
+                    }
+                });
+
+                document.addEventListener('click', function (event) {
+                    if (!profileMenu.contains(event.target) && !profileButton.contains(event.target)) {
+                        closeMenu();
+                    }
+                });
+
+                document.addEventListener('keydown', function (event) {
+                    if (event.key === 'Escape') {
+                        closeMenu();
+                        profileButton.focus();
+                    }
+                });
+
+                closeMenu();
+            }
         });
     </script>
 </head>
@@ -210,31 +386,61 @@ $guestLinks = [
     <aside class="sidebar" id="siteSidebar" aria-label="Ana navigasyon">
         <div class="sidebar-brand">Nexa</div>
         <nav class="sidebar-nav" aria-label="Site bağlantıları">
-            <?php foreach ($publicLinks as $link) : ?>
-                <a href="<?php echo htmlspecialchars($link['href'], ENT_QUOTES, 'UTF-8'); ?>">
-                    <?php echo htmlspecialchars($link['label'], ENT_QUOTES, 'UTF-8'); ?>
-                </a>
-            <?php endforeach; ?>
-            <?php if ($isAuthenticated) : ?>
-                <div class="sidebar-section" aria-label="Yetkili bağlantılar">
-                    <?php foreach ($authenticatedLinks as $link) : ?>
+            <div class="sidebar-group" aria-label="Genel">
+                <p class="sidebar-group-title">Genel</p>
+                <div class="sidebar-group-links">
+                    <?php foreach ($publicLinks as $link) : ?>
                         <a href="<?php echo htmlspecialchars($link['href'], ENT_QUOTES, 'UTF-8'); ?>">
                             <?php echo htmlspecialchars($link['label'], ENT_QUOTES, 'UTF-8'); ?>
                         </a>
                     <?php endforeach; ?>
                 </div>
+            </div>
+            <?php if ($isAuthenticated) : ?>
+                <div class="sidebar-group" aria-label="Yönetim">
+                    <p class="sidebar-group-title">Yönetim</p>
+                    <div class="sidebar-group-links">
+                        <?php foreach ($authenticatedLinks as $link) : ?>
+                            <a href="<?php echo htmlspecialchars($link['href'], ENT_QUOTES, 'UTF-8'); ?>">
+                                <?php echo htmlspecialchars($link['label'], ENT_QUOTES, 'UTF-8'); ?>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
             <?php else : ?>
-                <div class="sidebar-section" aria-label="Ziyaretçi bağlantıları">
-                    <?php foreach ($guestLinks as $link) : ?>
-                        <a href="<?php echo htmlspecialchars($link['href'], ENT_QUOTES, 'UTF-8'); ?>">
-                            <?php echo htmlspecialchars($link['label'], ENT_QUOTES, 'UTF-8'); ?>
-                        </a>
-                    <?php endforeach; ?>
+                <div class="sidebar-group" aria-label="Üyelik">
+                    <p class="sidebar-group-title">Üyelik</p>
+                    <div class="sidebar-group-links">
+                        <?php foreach ($guestLinks as $link) : ?>
+                            <a href="<?php echo htmlspecialchars($link['href'], ENT_QUOTES, 'UTF-8'); ?>">
+                                <?php echo htmlspecialchars($link['label'], ENT_QUOTES, 'UTF-8'); ?>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
             <?php endif; ?>
         </nav>
-        <?php if ($userFullName !== '') : ?>
-            <div class="sidebar-user">Merhaba, <?php echo htmlspecialchars($userFullName, ENT_QUOTES, 'UTF-8'); ?></div>
+        <?php if ($isAuthenticated) : ?>
+            <div class="sidebar-profile-wrapper">
+                <button class="sidebar-profile" id="sidebarProfileButton" type="button" aria-haspopup="menu" aria-expanded="false">
+                    <?php if ($profileInitials !== '') : ?>
+                        <span class="sidebar-profile-avatar" aria-hidden="true"><?php echo htmlspecialchars($profileInitials, ENT_QUOTES, 'UTF-8'); ?></span>
+                    <?php endif; ?>
+                    <span class="sidebar-profile-info">
+                        <span class="sidebar-profile-name">
+                            <?php echo htmlspecialchars($userFullName !== '' ? $userFullName : $username, ENT_QUOTES, 'UTF-8'); ?>
+                        </span>
+                        <?php if ($username !== '') : ?>
+                            <span class="sidebar-profile-username">@<?php echo htmlspecialchars($username, ENT_QUOTES, 'UTF-8'); ?></span>
+                        <?php endif; ?>
+                    </span>
+                    <span class="sidebar-profile-caret" aria-hidden="true">▾</span>
+                </button>
+                <div class="sidebar-profile-menu" id="sidebarProfileMenu" role="menu" aria-labelledby="sidebarProfileButton" hidden>
+                    <a href="settings.php" role="menuitem">Ayarlar</a>
+                    <a href="logout.php" role="menuitem">Çıkış Yap</a>
+                </div>
+            </div>
         <?php endif; ?>
     </aside>
     <main class="main-content" id="mainContent" role="main">
