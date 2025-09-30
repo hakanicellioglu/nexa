@@ -170,6 +170,39 @@ $escape = static fn(string $value): string => htmlspecialchars($value, ENT_QUOTE
             transform: translateY(-1px);
         }
 
+        .sidebar-toggle-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            line-height: 1;
+            min-width: 1.5rem;
+        }
+
+        .sidebar-toggle-icon .icon-close {
+            display: none;
+        }
+
+        body.sidebar-collapsed .sidebar-toggle-icon .icon-open {
+            display: none;
+        }
+
+        body.sidebar-collapsed .sidebar-toggle-icon .icon-close {
+            display: inline;
+        }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
         .brand {
             display: flex;
             align-items: center;
@@ -425,8 +458,12 @@ $escape = static fn(string $value): string => htmlspecialchars($value, ENT_QUOTE
     </style>
 </head>
 <body>
-    <button type="button" class="sidebar-toggle" aria-expanded="true" aria-controls="nexa-sidebar">
-        Menüyü Gizle
+    <button type="button" class="sidebar-toggle" aria-expanded="true" aria-controls="nexa-sidebar" aria-label="Menüyü Gizle">
+        <span class="sidebar-toggle-icon" aria-hidden="true">
+            <span class="icon-open" aria-hidden="true">☰</span>
+            <span class="icon-close" aria-hidden="true">✕</span>
+        </span>
+        <span class="visually-hidden sidebar-toggle-text">Menüyü Gizle</span>
     </button>
 
     <aside id="nexa-sidebar" class="sidebar" aria-label="Ana menü">
@@ -547,11 +584,24 @@ $escape = static fn(string $value): string => htmlspecialchars($value, ENT_QUOTE
         const dropdownMenu = document.querySelector('.dropdown-menu');
         const navSubmenus = document.querySelectorAll('details.nav-submenu');
 
+        const toggleText = sidebarToggle ? sidebarToggle.querySelector('.sidebar-toggle-text') : null;
+
+        function updateToggleLabel(isCollapsed) {
+            const label = isCollapsed ? 'Menüyü Göster' : 'Menüyü Gizle';
+            if (sidebarToggle) {
+                sidebarToggle.setAttribute('aria-label', label);
+            }
+
+            if (toggleText) {
+                toggleText.textContent = label;
+            }
+        }
+
         if (sidebar && sidebarToggle) {
             sidebarToggle.addEventListener('click', () => {
                 const isCollapsed = body.classList.toggle('sidebar-collapsed');
                 sidebarToggle.setAttribute('aria-expanded', String(!isCollapsed));
-                sidebarToggle.textContent = isCollapsed ? 'Menüyü Göster' : 'Menüyü Gizle';
+                updateToggleLabel(isCollapsed);
 
                 if (!isCollapsed && typeof sidebar.focus === 'function') {
                     sidebar.setAttribute('tabindex', '-1');
@@ -559,6 +609,8 @@ $escape = static fn(string $value): string => htmlspecialchars($value, ENT_QUOTE
                     sidebar.removeAttribute('tabindex');
                 }
             });
+
+            updateToggleLabel(body.classList.contains('sidebar-collapsed'));
         }
 
         function closeDropdown(event) {
