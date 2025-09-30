@@ -24,8 +24,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (!$errors) {
-        $statement = $pdo->prepare('SELECT id, firstname, lastname, username, password_hash FROM users WHERE email = :identifier OR username = :identifier LIMIT 1');
-        $statement->execute([':identifier' => $usernameOrEmail]);
+        $statement = $pdo->prepare(
+            'SELECT id, firstname, lastname, username, password_hash FROM users WHERE email = :email_identifier OR username = :username_identifier LIMIT 1'
+        );
+        $statement->execute([
+            ':email_identifier' => $usernameOrEmail,
+            ':username_identifier' => $usernameOrEmail,
+        ]);
         $user = $statement->fetch();
 
         if (!$user || !password_verify($password, $user['password_hash'])) {
