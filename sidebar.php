@@ -119,6 +119,17 @@ $escape = static fn(string $value): string => htmlspecialchars($value, ENT_QUOTE
             color: var(--text-primary);
             display: flex;
             min-height: 100vh;
+            position: relative;
+        }
+
+        body.sidebar-collapsed .sidebar {
+            transform: translateX(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        body.sidebar-collapsed .sidebar-toggle {
+            left: var(--spacing-lg);
         }
 
         .sidebar {
@@ -130,6 +141,33 @@ $escape = static fn(string $value): string => htmlspecialchars($value, ENT_QUOTE
             padding: var(--spacing-xl);
             gap: var(--spacing-xl);
             box-shadow: var(--shadow-md);
+            transition: transform var(--transition-fast), opacity var(--transition-fast);
+        }
+
+        .sidebar-toggle {
+            position: fixed;
+            top: var(--spacing-lg);
+            left: calc(min(320px, 80vw) + var(--spacing-lg));
+            z-index: 100;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-secondary);
+            background-color: var(--surface-primary);
+            color: inherit;
+            cursor: pointer;
+            font: inherit;
+            box-shadow: var(--shadow-sm);
+            transition: background-color var(--transition-fast), transform var(--transition-fast);
+        }
+
+        .sidebar-toggle:hover,
+        .sidebar-toggle:focus-visible {
+            background-color: var(--surface-secondary);
+            outline: none;
+            transform: translateY(-1px);
         }
 
         .brand {
@@ -387,7 +425,11 @@ $escape = static fn(string $value): string => htmlspecialchars($value, ENT_QUOTE
     </style>
 </head>
 <body>
-    <aside class="sidebar" aria-label="Ana menü">
+    <button type="button" class="sidebar-toggle" aria-expanded="true" aria-controls="nexa-sidebar">
+        Menüyü Gizle
+    </button>
+
+    <aside id="nexa-sidebar" class="sidebar" aria-label="Ana menü">
         <header class="brand">
             <div class="brand-logo" aria-hidden="true">N</div>
             <div class="brand-name">
@@ -497,10 +539,27 @@ $escape = static fn(string $value): string => htmlspecialchars($value, ENT_QUOTE
     </aside>
 
     <script>
+        const body = document.body;
+        const sidebar = document.querySelector('#nexa-sidebar');
+        const sidebarToggle = document.querySelector('.sidebar-toggle');
         const profileActions = document.querySelector('.profile-actions');
         const toggleButton = document.querySelector('.dropdown-toggle');
         const dropdownMenu = document.querySelector('.dropdown-menu');
         const navSubmenus = document.querySelectorAll('details.nav-submenu');
+
+        if (sidebar && sidebarToggle) {
+            sidebarToggle.addEventListener('click', () => {
+                const isCollapsed = body.classList.toggle('sidebar-collapsed');
+                sidebarToggle.setAttribute('aria-expanded', String(!isCollapsed));
+                sidebarToggle.textContent = isCollapsed ? 'Menüyü Göster' : 'Menüyü Gizle';
+
+                if (!isCollapsed && typeof sidebar.focus === 'function') {
+                    sidebar.setAttribute('tabindex', '-1');
+                    sidebar.focus({ preventScroll: true });
+                    sidebar.removeAttribute('tabindex');
+                }
+            });
+        }
 
         function closeDropdown(event) {
             if (!profileActions.contains(event.target)) {
