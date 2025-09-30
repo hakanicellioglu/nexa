@@ -179,16 +179,16 @@ $escape = static fn(string $value): string => htmlspecialchars($value, ENT_QUOTE
             min-width: 1.5rem;
         }
 
-        .sidebar-toggle-icon .icon-close {
+        .sidebar-toggle-icon .icon-open {
             display: none;
         }
 
         body.sidebar-collapsed .sidebar-toggle-icon .icon-open {
-            display: none;
+            display: inline;
         }
 
         body.sidebar-collapsed .sidebar-toggle-icon .icon-close {
-            display: inline;
+            display: none;
         }
 
         .visually-hidden {
