@@ -175,14 +175,16 @@ require_once __DIR__ . '/header.php';
                 font-weight: 600;
             }
 
-            .modal input {
+            .modal input,
+            .modal select {
                 padding: 10px 12px;
                 border-radius: 8px;
                 border: 1px solid #d1d5db;
                 font-size: 1rem;
             }
 
-            .modal input:focus {
+            .modal input:focus,
+            .modal select:focus {
                 outline: none;
                 border-color: #2563eb;
                 box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
@@ -275,11 +277,15 @@ require_once __DIR__ . '/header.php';
                     <input type="hidden" name="productId" id="productId">
                     <label for="productName">
                         Ürün Adı
-                        <input type="text" id="productName" name="name" placeholder="Örn. Temperli Cam" required>
+                        <input type="text" id="productName" name="name" required>
                     </label>
                     <label for="productType">
                         Ürün Türü
-                        <input type="text" id="productType" name="type" placeholder="Örn. Cam Türü">
+                        <select id="productType" name="type">
+                            <option value="">Tür seçin</option>
+                            <option value="Isıcam">Isıcam</option>
+                            <option value="Tekcam">Tekcam</option>
+                        </select>
                     </label>
                     <div class="modal-actions">
                         <button type="button" class="cancel" id="cancelModal">Vazgeç</button>
@@ -390,6 +396,16 @@ require_once __DIR__ . '/header.php';
                     productIdField.value = product.id;
                     productNameField.value = product.name || '';
                     productTypeField.value = product.type || '';
+                    if (product.type && productTypeField.value !== product.type) {
+                        const hasOption = Array.from(productTypeField.options).some((option) => option.value === product.type);
+                        if (!hasOption) {
+                            const customOption = document.createElement('option');
+                            customOption.value = product.type;
+                            customOption.textContent = product.type;
+                            productTypeField.appendChild(customOption);
+                        }
+                        productTypeField.value = product.type;
+                    }
                     toggleModal(true);
                 }
 

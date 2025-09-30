@@ -20,12 +20,22 @@ if (! is_array($data)) {
 
 $name = isset($data['name']) ? trim($data['name']) : '';
 $type = isset($data['type']) ? trim($data['type']) : '';
+$allowedTypes = ['Isıcam', 'Tekcam'];
 
 if ($name === '') {
     http_response_code(422);
     echo json_encode([
         'success' => false,
         'message' => 'Lütfen ürün adını belirtin.'
+    ], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+if ($type !== '' && ! in_array($type, $allowedTypes, true)) {
+    http_response_code(422);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Geçerli bir cam türü seçiniz.'
     ], JSON_UNESCAPED_UNICODE);
     exit;
 }
