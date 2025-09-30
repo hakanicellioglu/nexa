@@ -199,7 +199,7 @@ if (!empty($_SESSION['flash']) && is_array($_SESSION['flash'])) {
         }
     </style>
 </head>
-<body>
+<body class="container">
     <div class="dashboard-layout">
         <?= $sidebarMarkup ?>
         <main class="dashboard-main" aria-label="Kontrol paneli ana içerik">
