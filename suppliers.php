@@ -19,7 +19,7 @@ if ($result = $mysqli->query($query)) {
 }
 
 $pageTitle = 'Tedarikçiler';
-require_once __DIR__ . '/header.php';
+require_once __DIR__ . '/sidebar.php';
 
 function formatDate(?string $date): string
 {

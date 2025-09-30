@@ -11,7 +11,7 @@ $lastName = $_SESSION['lastname'] ?? '';
 $username = $_SESSION['username'] ?? '';
 
 $pageTitle = 'Kontrol Paneli';
-require_once __DIR__ . '/header.php';
+require_once __DIR__ . '/sidebar.php';
 ?>
         <div class="card">
             <h2>Hoş Geldin!</h2>
