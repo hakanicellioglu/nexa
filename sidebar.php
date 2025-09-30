@@ -1,5 +1,106 @@
 <?php
+declare(strict_types=1);
+
 // Sidebar component for Nexa platform
+
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+
+/**
+ * @psalm-return array{sections: list<array<string, mixed>>, user: array<string, string>, currentPage: string}
+ */
+$sidebarState = static function (): array {
+    $currentPage = basename($_SERVER['PHP_SELF'] ?? '') ?: 'index.php';
+
+    $user = (array)($_SESSION['user'] ?? []);
+
+    $firstName = trim((string)($user['firstname'] ?? ''));
+    $lastName = trim((string)($user['lastname'] ?? ''));
+    $fullName = trim($firstName . ' ' . $lastName);
+    if ($fullName === '') {
+        $fullName = 'Misafir Kullanıcı';
+    }
+
+    $username = trim((string)($user['username'] ?? ''));
+    $email = trim((string)($user['email'] ?? ''));
+
+    $avatarSource = $fullName !== 'Misafir Kullanıcı' ? $fullName : ($username !== '' ? $username : $email);
+    $avatarInitials = 'NK';
+    if ($avatarSource !== '') {
+        $words = preg_split('/\s+/u', $avatarSource) ?: [];
+        $initialLetters = array_map(static function (string $part): string {
+            return mb_strtoupper(mb_substr($part, 0, 1, 'UTF-8'), 'UTF-8');
+        }, array_filter($words));
+
+        if ($initialLetters !== []) {
+            $avatarInitials = implode('', array_slice($initialLetters, 0, 2));
+        }
+    }
+
+    $userDisplay = [
+        'fullName' => $fullName,
+        'username' => $username,
+        'email' => $email,
+        'avatar' => $avatarInitials,
+    ];
+
+    $sections = [
+        [
+            'id' => 'nav-general',
+            'title' => 'Genel',
+            'items' => [
+                [
+                    'label' => 'Kontrol Paneli',
+                    'href' => 'dashboard.php',
+                    'match' => ['dashboard.php', 'index.php'],
+                ],
+                [
+                    'label' => 'Ürünler',
+                    'href' => '#urunler',
+                ],
+                [
+                    'label' => 'Tedarikçiler',
+                    'href' => '#tedarikciler',
+                ],
+            ],
+        ],
+        [
+            'id' => 'nav-operations',
+            'title' => 'Operasyon',
+            'items' => [
+                [
+                    'label' => 'Fiyatlar',
+                    'href' => '#fiyatlar',
+                ],
+                [
+                    'label' => 'Projeler',
+                    'type' => 'submenu',
+                    'children' => [
+                        ['label' => 'Aktif Projeler', 'href' => '#projeler-aktif'],
+                        ['label' => 'Bekleyenler', 'href' => '#projeler-bekleyenler'],
+                        ['label' => 'Tamamlananlar', 'href' => '#projeler-tamamlananlar'],
+                    ],
+                ],
+                [
+                    'label' => 'Siparişler',
+                    'href' => '#siparisler',
+                ],
+            ],
+        ],
+    ];
+
+    return [
+        'sections' => $sections,
+        'user' => $userDisplay,
+        'currentPage' => $currentPage,
+    ];
+};
+
+$sidebarData = $sidebarState();
+
+$escape = static fn(string $value): string => htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -123,7 +224,8 @@
             transform: translateX(2px);
         }
 
-        .nav-item > a[aria-current="page"] {
+        .nav-item > a[aria-current="page"],
+        .nav-item > button[aria-expanded="true"] {
             background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(14, 165, 233, 0.12));
             color: var(--color-secondary-dark);
         }
@@ -133,10 +235,6 @@
             background-color: transparent;
         }
 
-        details.nav-submenu[open] {
-            background-color: var(--surface-secondary);
-        }
-
         details.nav-submenu > summary {
             display: flex;
             align-items: center;
@@ -144,10 +242,20 @@
             padding: var(--spacing-sm) var(--spacing-md);
             cursor: pointer;
             list-style: none;
+            border-radius: var(--radius-lg);
+            transition: background-color var(--transition-fast), transform var(--transition-fast);
         }
 
         details.nav-submenu > summary::-webkit-details-marker {
             display: none;
+        }
+
+        details.nav-submenu[open] > summary,
+        details.nav-submenu > summary:focus-visible,
+        details.nav-submenu > summary:hover {
+            background-color: var(--surface-secondary);
+            outline: none;
+            transform: translateX(2px);
         }
 
         .submenu-list {
@@ -289,40 +397,90 @@
         </header>
 
         <nav>
-            <section class="nav-group" aria-labelledby="nav-general">
-                <h2 id="nav-general" class="nav-group-title">Genel</h2>
-                <ul class="nav-list">
-                    <li class="nav-item"><a href="#" aria-current="page">Anasayfa</a></li>
-                    <li class="nav-item"><a href="#">Ürünler</a></li>
-                    <li class="nav-item"><a href="#">Tedarikçiler</a></li>
-                </ul>
-            </section>
+            <?php foreach ($sidebarData['sections'] as $section): ?>
+                <section class="nav-group" aria-labelledby="<?= $escape((string)$section['id']); ?>">
+                    <h2 id="<?= $escape((string)$section['id']); ?>" class="nav-group-title">
+                        <?= $escape((string)$section['title']); ?>
+                    </h2>
+                    <ul class="nav-list">
+                        <?php foreach ($section['items'] as $item): ?>
+                            <?php
+                                $type = (string)($item['type'] ?? 'link');
+                                if ($type === 'submenu') {
+                                    $children = (array)($item['children'] ?? []);
+                                    $isCurrent = array_reduce(
+                                        $children,
+                                        function (bool $carry, array $child) use ($sidebarData): bool {
+                                            $href = (string)($child['href'] ?? '');
+                                            $match = (array)($child['match'] ?? []);
+                                            if ($match === [] && $href !== '') {
+                                                $match = [$href];
+                                            }
 
-            <section class="nav-group" aria-labelledby="nav-operations">
-                <h2 id="nav-operations" class="nav-group-title">Operasyon</h2>
-                <ul class="nav-list">
-                    <li class="nav-item"><a href="#">Fiyatlar</a></li>
-                    <li class="nav-item">
-                        <details class="nav-submenu">
-                            <summary>Projeler <span aria-hidden="true">▾</span></summary>
-                            <ul class="submenu-list">
-                                <li><a href="#">Aktif Projeler</a></li>
-                                <li><a href="#">Bekleyenler</a></li>
-                                <li><a href="#">Tamamlananlar</a></li>
-                            </ul>
-                        </details>
-                    </li>
-                    <li class="nav-item"><a href="#">Siparişler</a></li>
-                </ul>
-            </section>
+                                            return $carry || in_array($sidebarData['currentPage'], array_map('basename', $match), true);
+                                        },
+                                        false
+                                    );
+                            ?>
+                                <li class="nav-item">
+                                    <details class="nav-submenu" <?= $isCurrent ? 'open' : ''; ?>>
+                                        <summary aria-expanded="<?= $isCurrent ? 'true' : 'false'; ?>">
+                                            <?= $escape((string)$item['label']); ?>
+                                            <span aria-hidden="true">▾</span>
+                                        </summary>
+                                        <ul class="submenu-list">
+                                            <?php foreach ($children as $child): ?>
+                                                <?php
+                                                    $childHref = (string)($child['href'] ?? '#');
+                                                    $childMatch = (array)($child['match'] ?? []);
+                                                    if ($childMatch === [] && $childHref !== '') {
+                                                        $childMatch = [$childHref];
+                                                    }
+
+                                                    $isChildCurrent = in_array($sidebarData['currentPage'], array_map('basename', $childMatch), true);
+                                                ?>
+                                                <li>
+                                                    <a href="<?= $escape($childHref); ?>" <?= $isChildCurrent ? 'aria-current="page"' : ''; ?>>
+                                                        <?= $escape((string)$child['label']); ?>
+                                                    </a>
+                                                </li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    </details>
+                                </li>
+                            <?php
+                                continue;
+                                }
+
+                                $href = (string)($item['href'] ?? '#');
+                                $match = (array)($item['match'] ?? []);
+                                if ($match === [] && $href !== '') {
+                                    $match = [$href];
+                                }
+
+                                $isCurrent = in_array($sidebarData['currentPage'], array_map('basename', $match), true);
+                            ?>
+                                <li class="nav-item">
+                                    <a href="<?= $escape($href); ?>" <?= $isCurrent ? 'aria-current="page"' : ''; ?>>
+                                        <?= $escape((string)$item['label']); ?>
+                                    </a>
+                                </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </section>
+            <?php endforeach; ?>
         </nav>
 
         <section class="profile" aria-label="Profil">
             <div class="profile-info">
-                <div class="avatar" aria-hidden="true">OA</div>
+                <div class="avatar" aria-hidden="true"><?= $escape($sidebarData['user']['avatar']); ?></div>
                 <div class="profile-text">
-                    <span class="name">Onur Aydın</span>
-                    <span class="username">@kullanici_adi</span>
+                    <span class="name"><?= $escape($sidebarData['user']['fullName']); ?></span>
+                    <?php if ($sidebarData['user']['username'] !== ''): ?>
+                        <span class="username">@<?= $escape($sidebarData['user']['username']); ?></span>
+                    <?php elseif ($sidebarData['user']['email'] !== ''): ?>
+                        <span class="username"><?= $escape($sidebarData['user']['email']); ?></span>
+                    <?php endif; ?>
                 </div>
             </div>
             <div class="profile-actions" data-open="false">
@@ -342,6 +500,7 @@
         const profileActions = document.querySelector('.profile-actions');
         const toggleButton = document.querySelector('.dropdown-toggle');
         const dropdownMenu = document.querySelector('.dropdown-menu');
+        const navSubmenus = document.querySelectorAll('details.nav-submenu');
 
         function closeDropdown(event) {
             if (!profileActions.contains(event.target)) {
@@ -361,6 +520,20 @@
             } else {
                 document.removeEventListener('click', closeDropdown);
             }
+        });
+
+        navSubmenus.forEach((submenu) => {
+            const summary = submenu.querySelector('summary');
+            if (!summary) {
+                return;
+            }
+
+            const updateAria = () => {
+                summary.setAttribute('aria-expanded', submenu.open ? 'true' : 'false');
+            };
+
+            updateAria();
+            submenu.addEventListener('toggle', updateAria);
         });
     </script>
 </body>
