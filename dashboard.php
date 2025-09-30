@@ -114,61 +114,93 @@ $welcomeMessage = $firstName !== ''
     ? sprintf('Bugün ne planlamak istersiniz, %s?', $escape($firstName))
     : 'Güncel gelişmeleri kontrol etmek için harika bir zaman.';
 
-$today = new DateTimeImmutable('now', new DateTimeZone('Europe/Istanbul'));
+$dashboardData = (array)($_SESSION['dashboard'] ?? []);
 
-$summaryCards = [
-    [
-        'title' => 'Bekleyen İşlemler',
-        'value' => '3',
-        'description' => 'Bugün tamamlanması önerilen görev sayısı.',
-    ],
-    [
-        'title' => 'Toplam Proje',
-        'value' => '12',
-        'description' => 'Aktif ve planlanan tüm projeleriniz.',
-    ],
-    [
-        'title' => 'Son Oturum',
-        'value' => $today->format('d.m.Y H:i'),
-        'description' => 'Bu cihazdan kaydedilen son giriş zamanı.',
-    ],
-];
+$buildSummaryCards = static function (array $items): array {
+    $summaryCards = [];
 
-$quickActions = [
-    [
-        'label' => 'Yeni Proje Oluştur',
-        'href' => '#',
-        'description' => 'Takımınızı organize etmek için hızlı bir başlangıç yapın.',
-    ],
-    [
-        'label' => 'Tedarikçi Ekle',
-        'href' => '#',
-        'description' => 'Tedarik ağınızı genişletin ve izleyin.',
-    ],
-    [
-        'label' => 'Fiyat Analizi Başlat',
-        'href' => '#',
-        'description' => 'Pazar trendlerini karşılaştırın ve raporlayın.',
-    ],
-];
+    foreach ($items as $item) {
+        if (!is_array($item)) {
+            continue;
+        }
 
-$activityFeed = [
-    [
-        'time' => 'Bugün',
-        'title' => 'Kontrol paneline giriş yapıldı',
-        'description' => 'Hesabınıza güvenli giriş sağladınız.',
-    ],
-    [
-        'time' => 'Dün',
-        'title' => 'Proje taslağı kaydedildi',
-        'description' => 'Yeni bir proje planı oluşturuldu ve taslak olarak saklandı.',
-    ],
-    [
-        'time' => 'Geçen Hafta',
-        'title' => 'Tedarikçi listesi güncellendi',
-        'description' => 'Tedarikçi performans raporu gözden geçirildi.',
-    ],
-];
+        $title = trim((string)($item['title'] ?? ''));
+        $value = trim((string)($item['value'] ?? ''));
+        $description = trim((string)($item['description'] ?? ''));
+
+        if ($title === '' && $value === '' && $description === '') {
+            continue;
+        }
+
+        $summaryCards[] = [
+            'title' => $title,
+            'value' => $value,
+            'description' => $description,
+        ];
+    }
+
+    return $summaryCards;
+};
+
+$buildQuickActions = static function (array $items): array {
+    $quickActions = [];
+
+    foreach ($items as $item) {
+        if (!is_array($item)) {
+            continue;
+        }
+
+        $label = trim((string)($item['label'] ?? ''));
+        $href = trim((string)($item['href'] ?? ''));
+        $description = trim((string)($item['description'] ?? ''));
+
+        if ($label === '') {
+            continue;
+        }
+
+        if ($href === '') {
+            $href = '#';
+        }
+
+        $quickActions[] = [
+            'label' => $label,
+            'href' => $href,
+            'description' => $description,
+        ];
+    }
+
+    return $quickActions;
+};
+
+$buildActivityFeed = static function (array $items): array {
+    $activityFeed = [];
+
+    foreach ($items as $item) {
+        if (!is_array($item)) {
+            continue;
+        }
+
+        $time = trim((string)($item['time'] ?? ''));
+        $title = trim((string)($item['title'] ?? ''));
+        $description = trim((string)($item['description'] ?? ''));
+
+        if ($time === '' && $title === '' && $description === '') {
+            continue;
+        }
+
+        $activityFeed[] = [
+            'time' => $time,
+            'title' => $title,
+            'description' => $description,
+        ];
+    }
+
+    return $activityFeed;
+};
+
+$summaryCards = $buildSummaryCards((array)($dashboardData['summary_cards'] ?? []));
+$quickActions = $buildQuickActions((array)($dashboardData['quick_actions'] ?? []));
+$activityFeed = $buildActivityFeed((array)($dashboardData['activity_feed'] ?? []));
 
 ?>
 <!DOCTYPE html>
@@ -266,6 +298,20 @@ $activityFeed = [
             margin-top: var(--spacing-sm);
             font-size: var(--font-size-sm);
             color: var(--text-secondary);
+        }
+
+        .empty-state {
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-xl);
+            background: rgba(148, 163, 184, 0.12);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+            text-align: center;
+        }
+
+        .summary-grid .empty-state {
+            grid-column: 1 / -1;
         }
 
         .grid-two-columns {
@@ -467,26 +513,34 @@ $activityFeed = [
         <?php include __DIR__ . '/partials/flash.php'; ?>
 
         <section class="summary-grid" aria-label="Özet kartları">
-            <?php foreach ($summaryCards as $card): ?>
-                <article class="summary-card">
-                    <span class="summary-card__label"><?= $escape($card['title']); ?></span>
-                    <h2 class="summary-card__value"><?= $escape($card['value']); ?></h2>
-                    <p class="summary-card__description"><?= $escape($card['description']); ?></p>
-                </article>
-            <?php endforeach; ?>
+            <?php if ($summaryCards !== []): ?>
+                <?php foreach ($summaryCards as $card): ?>
+                    <article class="summary-card">
+                        <span class="summary-card__label"><?= $escape($card['title']); ?></span>
+                        <h2 class="summary-card__value"><?= $escape($card['value']); ?></h2>
+                        <p class="summary-card__description"><?= $escape($card['description']); ?></p>
+                    </article>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p class="empty-state">Henüz özet kart verisi bulunamadı.</p>
+            <?php endif; ?>
         </section>
 
         <div class="grid-two-columns">
             <section class="panel" aria-label="Hızlı aksiyonlar">
                 <h2>Hızlı Aksiyonlar</h2>
-                <div class="quick-actions">
-                    <?php foreach ($quickActions as $action): ?>
-                        <article class="quick-action">
-                            <a href="<?= $escape($action['href']); ?>"><?= $escape($action['label']); ?></a>
-                            <p><?= $escape($action['description']); ?></p>
-                        </article>
-                    <?php endforeach; ?>
-                </div>
+                <?php if ($quickActions !== []): ?>
+                    <div class="quick-actions">
+                        <?php foreach ($quickActions as $action): ?>
+                            <article class="quick-action">
+                                <a href="<?= $escape($action['href']); ?>"><?= $escape($action['label']); ?></a>
+                                <p><?= $escape($action['description']); ?></p>
+                            </article>
+                        <?php endforeach; ?>
+                    </div>
+                <?php else: ?>
+                    <p class="empty-state">Henüz hızlı aksiyon tanımlanmadı.</p>
+                <?php endif; ?>
             </section>
 
             <section class="panel" aria-label="Profil özeti">
@@ -537,17 +591,21 @@ $activityFeed = [
 
         <section class="panel" aria-label="Son aktiviteler">
             <h2>Son Aktiviteler</h2>
-            <div class="activity-feed">
-                <?php foreach ($activityFeed as $activity): ?>
-                    <article class="activity-item">
-                        <span class="activity-item__time"><?= $escape($activity['time']); ?></span>
-                        <div>
-                            <h3 class="activity-item__title"><?= $escape($activity['title']); ?></h3>
-                            <p class="activity-item__description"><?= $escape($activity['description']); ?></p>
-                        </div>
-                    </article>
-                <?php endforeach; ?>
-            </div>
+            <?php if ($activityFeed !== []): ?>
+                <div class="activity-feed">
+                    <?php foreach ($activityFeed as $activity): ?>
+                        <article class="activity-item">
+                            <span class="activity-item__time"><?= $escape($activity['time']); ?></span>
+                            <div>
+                                <h3 class="activity-item__title"><?= $escape($activity['title']); ?></h3>
+                                <p class="activity-item__description"><?= $escape($activity['description']); ?></p>
+                            </div>
+                        </article>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <p class="empty-state">Son aktivite kaydı bulunamadı.</p>
+            <?php endif; ?>
         </section>
     </main>
 </div>
