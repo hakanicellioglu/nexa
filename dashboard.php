@@ -1,5 +1,9 @@
 <?php
 // Dashboard page for Nexa platform
+session_start();
+
+require __DIR__ . '/config.php';
+
 ob_start();
 include __DIR__ . '/sidebar.php';
 $sidebarOutput = ob_get_clean();
@@ -19,6 +23,164 @@ if (preg_match('/<style>(.*?)<\/style>/s', $sidebarOutput, $styleMatch)) {
 if (preg_match('/<script\b.*<\/script>/s', $sidebarOutput, $scriptMatch)) {
     $sidebarScript = $scriptMatch[0];
 }
+
+function fetchCount(PDO $pdo, string $table): int
+{
+    $sanitizedTable = preg_replace('/[^a-zA-Z0-9_]/', '', $table);
+    $statement = $pdo->query(sprintf('SELECT COUNT(*) AS total FROM `%s`', $sanitizedTable));
+
+    if ($statement === false) {
+        return 0;
+    }
+
+    $result = $statement->fetch();
+
+    return (int) ($result['total'] ?? 0);
+}
+
+function resolveUserName(PDO $pdo): string
+{
+    if (!empty($_SESSION['user'])) {
+        if (is_array($_SESSION['user'])) {
+            $firstname = $_SESSION['user']['firstname'] ?? '';
+            $lastname = $_SESSION['user']['lastname'] ?? '';
+            $fullName = trim($firstname . ' ' . $lastname);
+
+            if ($fullName !== '') {
+                return $fullName;
+            }
+        } elseif (is_string($_SESSION['user'])) {
+            return $_SESSION['user'];
+        }
+    }
+
+    if (!empty($_SESSION['user_id'])) {
+        $statement = $pdo->prepare('SELECT firstname, lastname FROM users WHERE id = :id LIMIT 1');
+        $statement->execute(['id' => $_SESSION['user_id']]);
+        $user = $statement->fetch();
+
+        if ($user) {
+            $fullName = trim(($user['firstname'] ?? '') . ' ' . ($user['lastname'] ?? ''));
+
+            if ($fullName !== '') {
+                return $fullName;
+            }
+        }
+    }
+
+    return 'Nexa kullanıcısı';
+}
+
+function formatRelativeTime(?string $timestamp): string
+{
+    if (empty($timestamp)) {
+        return 'bilinmiyor';
+    }
+
+    try {
+        $date = new DateTimeImmutable($timestamp);
+    } catch (Exception $exception) {
+        return $timestamp;
+    }
+
+    $now = new DateTimeImmutable('now');
+    $diff = $now->getTimestamp() - $date->getTimestamp();
+
+    if ($diff <= 0) {
+        return $date->format('d.m.Y H:i');
+    }
+
+    $minutes = (int) floor($diff / 60);
+    $hours = (int) floor($minutes / 60);
+    $days = (int) floor($hours / 24);
+    $months = (int) floor($days / 30);
+    $years = (int) floor($days / 365);
+
+    if ($years > 0) {
+        return $years . ' yıl önce';
+    }
+
+    if ($months > 0) {
+        return $months . ' ay önce';
+    }
+
+    if ($days > 0) {
+        return $days . ' gün önce';
+    }
+
+    if ($hours > 0) {
+        return $hours . ' saat önce';
+    }
+
+    if ($minutes > 0) {
+        return $minutes . ' dakika önce';
+    }
+
+    return 'az önce';
+}
+
+function abbreviateLabel(string $label): string
+{
+    if (function_exists('mb_substr')) {
+        return mb_strtoupper(mb_substr($label, 0, 2));
+    }
+
+    return strtoupper(substr($label, 0, 2));
+}
+
+function resolveTableLabel(string $tableName): string
+{
+    $map = [
+        'orders' => 'Sipariş',
+        'projects' => 'Proje',
+        'products' => 'Ürün',
+        'suppliers' => 'Tedarikçi',
+        'users' => 'Kullanıcı',
+    ];
+
+    return $map[strtolower($tableName)] ?? ucfirst($tableName);
+}
+
+$userName = resolveUserName($pdo);
+
+$statistics = [
+    [
+        'label' => 'Projeler',
+        'value' => fetchCount($pdo, 'projects'),
+        'description' => 'Kayıtlı proje sayısı',
+    ],
+    [
+        'label' => 'Siparişler',
+        'value' => fetchCount($pdo, 'orders'),
+        'description' => 'Verilen siparişlerin toplamı',
+    ],
+    [
+        'label' => 'Tedarikçiler',
+        'value' => fetchCount($pdo, 'suppliers'),
+        'description' => 'Çalışılan tedarikçi sayısı',
+    ],
+];
+
+$projectsStatement = $pdo->query(
+    'SELECT p.id, p.name, p.created_at, p.updated_at, COUNT(o.id) AS order_count
+     FROM projects p
+     LEFT JOIN orders o ON o.project_id = p.id
+     GROUP BY p.id
+     ORDER BY COALESCE(p.updated_at, p.created_at) DESC
+     LIMIT 5'
+);
+
+$projects = $projectsStatement ? $projectsStatement->fetchAll() : [];
+
+$activitiesStatement = $pdo->query(
+    'SELECT l.table_name, l.action_type, l.date, l.new_value, l.old_value, u.firstname, u.lastname
+     FROM logs l
+     LEFT JOIN users u ON u.id = l.user_id
+     ORDER BY l.date DESC
+     LIMIT 5'
+);
+
+$activities = $activitiesStatement ? $activitiesStatement->fetchAll() : [];
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -98,12 +260,9 @@ if (preg_match('/<script\b.*<\/script>/s', $sidebarOutput, $scriptMatch)) {
             font-weight: var(--font-weight-semibold);
         }
 
-        .stat-trend {
+        .stat-description {
             font-size: var(--font-size-sm);
-            color: var(--color-success);
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-xs);
+            color: var(--text-secondary);
         }
 
         .section {
@@ -209,85 +368,71 @@ if (preg_match('/<script\b.*<\/script>/s', $sidebarOutput, $scriptMatch)) {
         <?php echo $sidebarContent; ?>
         <main class="dashboard-content" role="main">
             <header class="dashboard-header">
-                <h1 class="dashboard-title">Hoş geldin, Onur!</h1>
-                <p class="dashboard-subtitle">Bugünün genel görünümü ve performans metrikleri burada.</p>
+                <h1 class="dashboard-title">Hoş geldin, <?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?>!</h1>
+                <p class="dashboard-subtitle">Verileriniz anlık olarak güncellenmektedir.</p>
             </header>
 
             <section class="dashboard-grid" aria-label="Performans kartları">
-                <article class="stat-card" aria-label="Aktif Projeler">
-                    <span class="stat-label">Aktif Projeler</span>
-                    <span class="stat-value">18</span>
-                    <span class="stat-trend">▲ %4,2 artış</span>
-                </article>
-                <article class="stat-card" aria-label="Yeni Talepler">
-                    <span class="stat-label">Yeni Talepler</span>
-                    <span class="stat-value">52</span>
-                    <span class="stat-trend">▲ %7,8 artış</span>
-                </article>
-                <article class="stat-card" aria-label="Müşteri Memnuniyeti">
-                    <span class="stat-label">Müşteri Memnuniyeti</span>
-                    <span class="stat-value">%96</span>
-                    <span class="stat-trend">▲ %1,5 artış</span>
-                </article>
+                <?php foreach ($statistics as $statistic): ?>
+                    <article class="stat-card" aria-label="<?php echo htmlspecialchars($statistic['label'], ENT_QUOTES, 'UTF-8'); ?>">
+                        <span class="stat-label"><?php echo htmlspecialchars($statistic['label'], ENT_QUOTES, 'UTF-8'); ?></span>
+                        <span class="stat-value"><?php echo number_format((int) $statistic['value'], 0, ',', '.'); ?></span>
+                        <span class="stat-description"><?php echo htmlspecialchars($statistic['description'], ENT_QUOTES, 'UTF-8'); ?></span>
+                    </article>
+                <?php endforeach; ?>
             </section>
 
             <section class="section" aria-labelledby="section-projects">
                 <div class="section-header">
                     <h2 id="section-projects" class="section-title">Projeler</h2>
-                    <a class="section-action" href="#">Tümünü Gör</a>
                 </div>
                 <div class="projects-list">
-                    <article class="project-item">
-                        <div class="project-info">
-                            <h3>Finans Otomasyonu</h3>
-                            <p class="project-meta">Son güncelleme: 12 dakika önce</p>
-                        </div>
-                        <span class="project-status">Devam ediyor</span>
-                    </article>
-                    <article class="project-item">
-                        <div class="project-info">
-                            <h3>Tedarikçi Yönetimi</h3>
-                            <p class="project-meta">Son güncelleme: 1 saat önce</p>
-                        </div>
-                        <span class="project-status">Analiz</span>
-                    </article>
-                    <article class="project-item">
-                        <div class="project-info">
-                            <h3>Ürün Fiyatlandırma</h3>
-                            <p class="project-meta">Son güncelleme: 3 saat önce</p>
-                        </div>
-                        <span class="project-status">Planlama</span>
-                    </article>
+                    <?php if (!empty($projects)): ?>
+                        <?php foreach ($projects as $project): ?>
+                            <article class="project-item">
+                                <div class="project-info">
+                                    <h3><?php echo htmlspecialchars($project['name'], ENT_QUOTES, 'UTF-8'); ?></h3>
+                                    <p class="project-meta">Son güncelleme: <?php echo htmlspecialchars(formatRelativeTime($project['updated_at'] ?: $project['created_at']), ENT_QUOTES, 'UTF-8'); ?></p>
+                                </div>
+                                <span class="project-status"><?php echo number_format((int) $project['order_count'], 0, ',', '.'); ?> sipariş</span>
+                            </article>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>Henüz proje bulunmuyor.</p>
+                    <?php endif; ?>
                 </div>
             </section>
 
             <section class="section" aria-labelledby="section-activity">
                 <div class="section-header">
                     <h2 id="section-activity" class="section-title">Son Aktiviteler</h2>
-                    <a class="section-action" href="#">Raporları aç</a>
                 </div>
                 <div class="activity-timeline">
-                    <article class="activity-item">
-                        <div class="activity-icon" aria-hidden="true">PR</div>
-                        <div class="activity-details">
-                            <h3>Yeni fiyatlandırma stratejisi eklendi</h3>
-                            <span class="activity-meta">30 dakika önce • Onur Aydın</span>
-                        </div>
-                    </article>
-                    <article class="activity-item">
-                        <div class="activity-icon" aria-hidden="true">PO</div>
-                        <div class="activity-details">
-                            <h3>35 adet sipariş onaylandı</h3>
-                            <span class="activity-meta">1 saat önce • Satınalma</span>
-                        </div>
-                    </article>
-                    <article class="activity-item">
-                        <div class="activity-icon" aria-hidden="true">TD</div>
-                        <div class="activity-details">
-                            <h3>Yeni tedarikçi kaydı oluşturuldu</h3>
-                            <span class="activity-meta">2 saat önce • İş Geliştirme</span>
-                        </div>
-                    </article>
+                    <?php if (!empty($activities)): ?>
+                        <?php foreach ($activities as $activity): ?>
+                            <?php
+                            $tableLabel = resolveTableLabel((string) ($activity['table_name'] ?? 'Kayıt'));
+                            $actionType = strtoupper((string) ($activity['action_type'] ?? ''));
+                            $actionMap = [
+                                'INSERT' => 'oluşturuldu',
+                                'UPDATE' => 'güncellendi',
+                                'DELETE' => 'silindi',
+                            ];
+                            $actionLabel = $actionMap[$actionType] ?? 'işlendi';
+                            $actorName = trim(($activity['firstname'] ?? '') . ' ' . ($activity['lastname'] ?? ''));
+                            $actorText = $actorName !== '' ? $actorName : 'Sistem';
+                            ?>
+                            <article class="activity-item">
+                                <div class="activity-icon" aria-hidden="true"><?php echo htmlspecialchars(abbreviateLabel($tableLabel), ENT_QUOTES, 'UTF-8'); ?></div>
+                                <div class="activity-details">
+                                    <h3><?php echo htmlspecialchars($tableLabel . ' ' . $actionLabel, ENT_QUOTES, 'UTF-8'); ?></h3>
+                                    <span class="activity-meta"><?php echo htmlspecialchars(formatRelativeTime($activity['date'] ?? null), ENT_QUOTES, 'UTF-8'); ?> • <?php echo htmlspecialchars($actorText, ENT_QUOTES, 'UTF-8'); ?></span>
+                                </div>
+                            </article>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>Herhangi bir aktivite kaydı bulunamadı.</p>
+                    <?php endif; ?>
                 </div>
             </section>
         </main>
