@@ -78,7 +78,7 @@ if (function_exists('mb_strtoupper')) {
                     }
                 }
                 $isActive = $currentPage === basename($item['href']) || $isChildActive;
-                $linkClasses = 'nav-link d-flex align-items-center gap-3 px-3 py-3 rounded-4';
+                $linkClasses = 'nav-link d-flex align-items-center gap-3 px-3 py-2 rounded-4';
                 if ($isActive) {
                     $linkClasses .= ' active';
                 }
@@ -152,7 +152,7 @@ if (function_exists('mb_strtoupper')) {
                         }
                     }
                     $isActive = $currentPage === basename($item['href']) || $isChildActive;
-                    $linkClasses = 'nav-link d-flex align-items-center gap-3 px-3 py-3 rounded-4';
+                    $linkClasses = 'nav-link d-flex align-items-center gap-3 px-3 py-2 rounded-4';
                     if ($isActive) {
                         $linkClasses .= ' active';
                     }
