@@ -59,50 +59,33 @@ if (function_exists('mb_strtoupper')) {
 <style>
     .sidebar .nav-link,
     #sidebarOffcanvas .nav-link {
-        transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+        transition: all 0.2s ease;
     }
 
     .sidebar .nav-link:hover:not(.active),
     #sidebarOffcanvas .nav-link:hover:not(.active) {
-        color: #ffffff !important;
-        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%) !important;
-        border-color: transparent !important;
-        box-shadow: 0 0.4rem 1.2rem rgba(99, 102, 241, 0.15);
+        background-color: #f8f9fa !important;
     }
-
-    .sidebar .nav-link:hover .sidebar-label,
-    #sidebarOffcanvas .nav-link:hover .sidebar-label,
-    .sidebar .nav-link:hover .sidebar-chevron,
-    #sidebarOffcanvas .nav-link:hover .sidebar-chevron,
-    .sidebar .nav-link:hover .sidebar-icon,
-    #sidebarOffcanvas .nav-link:hover .sidebar-icon {
-        color: #ffffff !important;
+    
+    .sidebar .nav-link:hover:not(.active) *,
+    #sidebarOffcanvas .nav-link:hover:not(.active) * {
+        color: #000 !important;
     }
-
-    .sidebar .nav-link:hover .sidebar-icon-wrapper,
-    #sidebarOffcanvas .nav-link:hover .sidebar-icon-wrapper {
-        background: rgba(255, 255, 255, 0.24) !important;
-    }
-
+    
     .sidebar .nav .nav-link:hover:not(.active),
     #sidebarOffcanvas .nav .nav-link:hover:not(.active) {
-        color: #ffffff !important;
-        background: rgba(99, 102, 241, 0.35) !important;
-        border-color: transparent !important;
-        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+        background-color: #e9ecef !important;
     }
 </style>
-<aside class="sidebar col-auto d-none d-lg-flex flex-column flex-shrink-0 align-self-start px-4 py-4 position-sticky top-0 min-vh-100 bg-white bg-opacity-90 border-end border-light-subtle shadow-sm" style="width: 280px; font-size: 0.85rem;">
-    <div class="d-flex align-items-center gap-3 mb-5">
-        <div class="rounded-4 d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.18) 0%, rgba(139, 92, 246, 0.18) 100%); width: 48px; height: 48px; line-height: 0;">
-            <i class="bi bi-stars text-primary fs-4 lh-1"></i>
-        </div>
-        <div>
-            <div class="text-uppercase text-secondary fw-semibold small" id="sidebarOffcanvasLabel">Nexa</div>
-        </div>
+<aside class="sidebar col-auto d-none d-lg-flex flex-column flex-shrink-0 align-self-start px-3 py-4 position-sticky top-0 min-vh-100 bg-white border-end" style="width: 260px;">
+    <div class="d-flex align-items-center gap-2 mb-5 px-2">
+        <i class="bi bi-stars fs-4"></i>
+        <div class="fw-bold">Nexa</div>
     </div>
-    <div class="text-secondary text-uppercase small fw-semibold mb-3">Menü</div>
-    <nav class="nav flex-column gap-2 mb-auto">
+    
+    <div class="text-secondary text-uppercase small mb-2 px-2" style="font-size: 0.7rem; letter-spacing: 0.5px;">Menü</div>
+    
+    <nav class="nav flex-column gap-1 mb-auto">
         <?php foreach ($navItems as $item): ?>
             <?php
                 $childItems = $item['children'] ?? [];
@@ -114,49 +97,31 @@ if (function_exists('mb_strtoupper')) {
                     }
                 }
                 $isActive = $currentPage === basename($item['href']) || $isChildActive;
-                $linkClasses = 'nav-link d-flex align-items-center gap-3 px-3 py-2 rounded-4 fw-semibold';
-                $linkStyle = '';
+                $linkClasses = 'nav-link d-flex align-items-center gap-2 px-3 py-2 rounded text-decoration-none';
                 if ($isActive) {
-                    $linkClasses .= ' active text-white shadow-sm';
-                    $linkStyle = 'background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);';
+                    $linkClasses .= ' bg-dark text-white';
                 } else {
-                    $linkClasses .= ' text-body bg-white border border-light-subtle';
+                    $linkClasses .= ' text-body';
                 }
-                $iconWrapperStyle = $isActive
-                    ? 'background: rgba(255, 255, 255, 0.2); color: #ffffff;'
-                    : 'background: rgba(99, 102, 241, 0.12); color: #4f46e5;';
-                $iconClasses = 'bi ' . $item['icon'] . ' lh-1 fs-5 sidebar-icon';
-                $iconClasses .= $isActive ? ' text-white' : ' text-primary';
-                $labelClasses = 'fw-semibold small sidebar-label';
-                $labelClasses .= $isActive ? ' text-white' : ' text-body';
-                $chevronClasses = 'ms-auto sidebar-chevron';
-                $chevronClasses .= $isActive ? ' text-white-75' : ' text-primary';
             ?>
             <div>
-                <a class="<?= e($linkClasses) ?>" href="<?= e($item['href']) ?>"<?php if ($isActive): ?> aria-current="page"<?php endif; ?><?php if ($linkStyle !== ''): ?> style="<?= e($linkStyle) ?>"<?php endif; ?>>
-                    <span class="sidebar-icon-wrapper d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0" style="<?= e($iconWrapperStyle) ?> width: 42px; height: 42px; line-height: 0;">
-                        <i class="<?= e($iconClasses) ?>"></i>
-                    </span>
-                    <span class="<?= e($labelClasses) ?>"><?= e($item['label']) ?></span>
-                    <?php if ($isActive): ?>
-                        <span class="<?= e($chevronClasses) ?>"><i class="bi bi-chevron-right lh-1"></i></span>
-                    <?php endif; ?>
+                <a class="<?= e($linkClasses) ?>" href="<?= e($item['href']) ?>"<?php if ($isActive): ?> aria-current="page"<?php endif; ?>>
+                    <i class="bi <?= e($item['icon']) ?>"></i>
+                    <span class="small"><?= e($item['label']) ?></span>
                 </a>
                 <?php if (!empty($childItems)): ?>
-                    <div class="nav flex-column gap-1 ps-5 mt-1">
+                    <div class="nav flex-column gap-1 ps-4 mt-1">
                         <?php foreach ($childItems as $child): ?>
                             <?php
                                 $isChildLinkActive = $currentPage === basename($child['href']);
-                                $childClasses = 'nav-link px-3 py-2 rounded-4 small fw-medium sidebar-label';
-                                $childStyle = '';
+                                $childClasses = 'nav-link px-3 py-2 rounded small text-decoration-none';
                                 if ($isChildLinkActive) {
-                                    $childClasses .= ' active text-primary-emphasis shadow-sm';
-                                    $childStyle = 'background: rgba(99, 102, 241, 0.18);';
+                                    $childClasses .= ' bg-light text-dark fw-medium';
                                 } else {
-                                    $childClasses .= ' text-body-secondary';
+                                    $childClasses .= ' text-secondary';
                                 }
                             ?>
-                            <a class="<?= e($childClasses) ?>" href="<?= e($child['href']) ?>"<?php if ($isChildLinkActive): ?> aria-current="page"<?php endif; ?><?php if ($childStyle !== ''): ?> style="<?= e($childStyle) ?>"<?php endif; ?>>
+                            <a class="<?= e($childClasses) ?>" href="<?= e($child['href']) ?>"<?php if ($isChildLinkActive): ?> aria-current="page"<?php endif; ?>>
                                 <?= e($child['label']) ?>
                             </a>
                         <?php endforeach; ?>
@@ -165,35 +130,34 @@ if (function_exists('mb_strtoupper')) {
             </div>
         <?php endforeach; ?>
     </nav>
-    <div class="mt-auto pt-4 border-top border-light-subtle">
-        <div class="d-flex align-items-center gap-3">
-            <div class="rounded-circle bg-primary-subtle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; line-height: 0; color: #4f46e5;">
-                <span class="fw-semibold" style="line-height: 1;">
-                    <?= e($initials) ?>
-                </span>
+    
+    <div class="mt-auto pt-3 border-top">
+        <div class="d-flex align-items-center gap-2 mb-3 px-2">
+            <div class="rounded-circle bg-dark text-white d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; font-size: 0.85rem;">
+                <?= e($initials) ?>
             </div>
-            <div class="text-body">
-                <div class="fw-semibold mb-1"><?= e(trim($firstName . ' ' . $lastName)) ?></div>
-                <div class="text-body-secondary small text-truncate" style="max-width: 150px;">
+            <div class="flex-grow-1 overflow-hidden">
+                <div class="fw-medium small text-truncate"><?= e(trim($firstName . ' ' . $lastName)) ?></div>
+                <div class="text-secondary small text-truncate" style="font-size: 0.75rem;">
                     <?= e($email) ?>
                 </div>
             </div>
         </div>
-        <a class="btn btn-outline-primary btn-sm w-100 mt-4" href="logout.php">
-            <i class="bi bi-box-arrow-right lh-1 me-2"></i>Çıkış Yap
+        <a class="btn btn-outline-dark btn-sm w-100" href="logout.php">
+            <i class="bi bi-box-arrow-right me-1"></i>Çıkış
         </a>
     </div>
 </aside>
-<div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel" style="font-size: 0.9rem; background: rgba(255, 255, 255, 0.95);">
-    <div class="offcanvas-header border-bottom border-light-subtle">
-        <div>
-            <div class="text-uppercase text-secondary fw-semibold small">Nexa</div>
-        </div>
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel">
+    <div class="offcanvas-header border-bottom">
+        <div class="fw-bold">Nexa</div>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Kapat"></button>
     </div>
     <div class="offcanvas-body d-flex flex-column">
-        <div class="text-secondary text-uppercase small fw-semibold mb-3">Menü</div>
-        <nav class="nav flex-column gap-2 mb-4">
+        <div class="text-secondary text-uppercase small mb-2" style="font-size: 0.7rem; letter-spacing: 0.5px;">Menü</div>
+        
+        <nav class="nav flex-column gap-1 mb-4">
             <?php foreach ($navItems as $item): ?>
                 <?php
                     $childItems = $item['children'] ?? [];
@@ -205,49 +169,31 @@ if (function_exists('mb_strtoupper')) {
                         }
                     }
                     $isActive = $currentPage === basename($item['href']) || $isChildActive;
-                    $linkClasses = 'nav-link d-flex align-items-center gap-3 px-3 py-2 rounded-4 fw-semibold';
-                    $linkStyle = '';
+                    $linkClasses = 'nav-link d-flex align-items-center gap-2 px-3 py-2 rounded text-decoration-none';
                     if ($isActive) {
-                        $linkClasses .= ' active text-white shadow-sm';
-                        $linkStyle = 'background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);';
+                        $linkClasses .= ' bg-dark text-white';
                     } else {
-                        $linkClasses .= ' text-body bg-white border border-light-subtle';
+                        $linkClasses .= ' text-body';
                     }
-                    $iconWrapperStyle = $isActive
-                        ? 'background: rgba(255, 255, 255, 0.2); color: #ffffff;'
-                        : 'background: rgba(99, 102, 241, 0.12); color: #4f46e5;';
-                    $iconClasses = 'bi ' . $item['icon'] . ' lh-1 fs-5 sidebar-icon';
-                    $iconClasses .= $isActive ? ' text-white' : ' text-primary';
-                    $labelClasses = 'fw-semibold small sidebar-label';
-                    $labelClasses .= $isActive ? ' text-white' : ' text-body';
-                    $chevronClasses = 'ms-auto sidebar-chevron';
-                    $chevronClasses .= $isActive ? ' text-white-75' : ' text-primary';
                 ?>
                 <div>
-                    <a class="<?= e($linkClasses) ?>" href="<?= e($item['href']) ?>"<?php if ($isActive): ?> aria-current="page"<?php endif; ?><?php if ($linkStyle !== ''): ?> style="<?= e($linkStyle) ?>"<?php endif; ?>>
-                        <span class="sidebar-icon-wrapper d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0" style="<?= e($iconWrapperStyle) ?> width: 42px; height: 42px; line-height: 0;">
-                            <i class="<?= e($iconClasses) ?>"></i>
-                        </span>
-                        <span class="<?= e($labelClasses) ?>"><?= e($item['label']) ?></span>
-                        <?php if ($isActive): ?>
-                            <span class="<?= e($chevronClasses) ?>"><i class="bi bi-chevron-right lh-1"></i></span>
-                        <?php endif; ?>
+                    <a class="<?= e($linkClasses) ?>" href="<?= e($item['href']) ?>"<?php if ($isActive): ?> aria-current="page"<?php endif; ?>>
+                        <i class="bi <?= e($item['icon']) ?>"></i>
+                        <span class="small"><?= e($item['label']) ?></span>
                     </a>
                     <?php if (!empty($childItems)): ?>
-                        <div class="nav flex-column gap-1 ps-5 mt-1">
+                        <div class="nav flex-column gap-1 ps-4 mt-1">
                             <?php foreach ($childItems as $child): ?>
                                 <?php
                                     $isChildLinkActive = $currentPage === basename($child['href']);
-                                $childClasses = 'nav-link px-3 py-2 rounded-4 small fw-medium sidebar-label';
-                                $childStyle = '';
-                                if ($isChildLinkActive) {
-                                    $childClasses .= ' active text-primary-emphasis shadow-sm';
-                                    $childStyle = 'background: rgba(99, 102, 241, 0.18);';
-                                } else {
-                                        $childClasses .= ' text-body-secondary';
+                                    $childClasses = 'nav-link px-3 py-2 rounded small text-decoration-none';
+                                    if ($isChildLinkActive) {
+                                        $childClasses .= ' bg-light text-dark fw-medium';
+                                    } else {
+                                        $childClasses .= ' text-secondary';
                                     }
                                 ?>
-                                <a class="<?= e($childClasses) ?>" href="<?= e($child['href']) ?>"<?php if ($isChildLinkActive): ?> aria-current="page"<?php endif; ?><?php if ($childStyle !== ''): ?> style="<?= e($childStyle) ?>"<?php endif; ?>>
+                                <a class="<?= e($childClasses) ?>" href="<?= e($child['href']) ?>"<?php if ($isChildLinkActive): ?> aria-current="page"<?php endif; ?>>
                                     <?= e($child['label']) ?>
                                 </a>
                             <?php endforeach; ?>
@@ -256,22 +202,21 @@ if (function_exists('mb_strtoupper')) {
                 </div>
             <?php endforeach; ?>
         </nav>
-        <div class="mt-auto border-top border-light-subtle pt-3">
-            <div class="d-flex align-items-center gap-3 mb-3">
-                <div class="rounded-circle bg-primary-subtle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; line-height: 0; color: #4f46e5;">
-                    <span class="fw-semibold" style="line-height: 1;">
-                        <?= e($initials) ?>
-                    </span>
+        
+        <div class="mt-auto border-top pt-3">
+            <div class="d-flex align-items-center gap-2 mb-3">
+                <div class="rounded-circle bg-dark text-white d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; font-size: 0.85rem;">
+                    <?= e($initials) ?>
                 </div>
-                <div>
-                    <div class="fw-semibold text-body mb-1"><?= e(trim($firstName . ' ' . $lastName)) ?></div>
-                    <div class="text-body-secondary small text-truncate" style="max-width: 180px;">
+                <div class="flex-grow-1 overflow-hidden">
+                    <div class="fw-medium small text-truncate"><?= e(trim($firstName . ' ' . $lastName)) ?></div>
+                    <div class="text-secondary small text-truncate" style="font-size: 0.75rem;">
                         <?= e($email) ?>
                     </div>
                 </div>
             </div>
-            <a class="btn btn-outline-primary btn-sm w-100" href="logout.php">
-                <i class="bi bi-box-arrow-right lh-1 me-2"></i>Çıkış Yap
+            <a class="btn btn-outline-dark btn-sm w-100" href="logout.php">
+                <i class="bi bi-box-arrow-right me-1"></i>Çıkış
             </a>
         </div>
     </div>
