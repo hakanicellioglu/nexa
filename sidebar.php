@@ -67,6 +67,7 @@ $navSections = [
         border-radius: 50%;
         background: linear-gradient(135deg, rgba(102, 126, 234, 0.85), rgba(118, 75, 162, 0.85));
         padding: 2px;
+        box-sizing: border-box;
         display: flex;
         align-items: center;
         justify-content: center;
