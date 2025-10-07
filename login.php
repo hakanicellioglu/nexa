@@ -24,9 +24,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$errors) {
         $pdo = get_db_connection();
         $stmt = $pdo->prepare(
-            'SELECT id, firstname, lastname, email, username, password FROM users WHERE username = :username OR email = :username LIMIT 1'
+            'SELECT id, firstname, lastname, email, username, password FROM users WHERE username = :username OR email = :email LIMIT 1'
         );
-        $stmt->execute([':username' => $username]);
+        $stmt->execute([
+            ':username' => $username,
+            ':email' => $username,
+        ]);
         $user = $stmt->fetch();
 
         if (!$user || !password_verify($password, (string) $user['password'])) {
