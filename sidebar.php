@@ -56,6 +56,42 @@ if (function_exists('mb_strtoupper')) {
     $initials = strtoupper($initials);
 }
 ?>
+<style>
+    .sidebar .nav-link,
+    #sidebarOffcanvas .nav-link {
+        transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .sidebar .nav-link:hover:not(.active),
+    #sidebarOffcanvas .nav-link:hover:not(.active) {
+        color: #ffffff !important;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%) !important;
+        border-color: transparent !important;
+        box-shadow: 0 0.4rem 1.2rem rgba(99, 102, 241, 0.15);
+    }
+
+    .sidebar .nav-link:hover .sidebar-label,
+    #sidebarOffcanvas .nav-link:hover .sidebar-label,
+    .sidebar .nav-link:hover .sidebar-chevron,
+    #sidebarOffcanvas .nav-link:hover .sidebar-chevron,
+    .sidebar .nav-link:hover .sidebar-icon,
+    #sidebarOffcanvas .nav-link:hover .sidebar-icon {
+        color: #ffffff !important;
+    }
+
+    .sidebar .nav-link:hover .sidebar-icon-wrapper,
+    #sidebarOffcanvas .nav-link:hover .sidebar-icon-wrapper {
+        background: rgba(255, 255, 255, 0.24) !important;
+    }
+
+    .sidebar .nav .nav-link:hover:not(.active),
+    #sidebarOffcanvas .nav .nav-link:hover:not(.active) {
+        color: #ffffff !important;
+        background: rgba(99, 102, 241, 0.35) !important;
+        border-color: transparent !important;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+    }
+</style>
 <aside class="sidebar col-auto d-none d-lg-flex flex-column flex-shrink-0 align-self-start px-4 py-4 position-sticky top-0 min-vh-100 bg-white bg-opacity-90 border-end border-light-subtle shadow-sm" style="width: 280px; font-size: 0.85rem;">
     <div class="d-flex align-items-center gap-3 mb-5">
         <div class="rounded-4 d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.18) 0%, rgba(139, 92, 246, 0.18) 100%); width: 48px; height: 48px; line-height: 0;">
@@ -89,16 +125,16 @@ if (function_exists('mb_strtoupper')) {
                 $iconWrapperStyle = $isActive
                     ? 'background: rgba(255, 255, 255, 0.2); color: #ffffff;'
                     : 'background: rgba(99, 102, 241, 0.12); color: #4f46e5;';
-                $iconClasses = 'bi ' . $item['icon'] . ' lh-1 fs-5';
+                $iconClasses = 'bi ' . $item['icon'] . ' lh-1 fs-5 sidebar-icon';
                 $iconClasses .= $isActive ? ' text-white' : ' text-primary';
-                $labelClasses = 'fw-semibold small';
+                $labelClasses = 'fw-semibold small sidebar-label';
                 $labelClasses .= $isActive ? ' text-white' : ' text-body';
-                $chevronClasses = 'ms-auto';
+                $chevronClasses = 'ms-auto sidebar-chevron';
                 $chevronClasses .= $isActive ? ' text-white-75' : ' text-primary';
             ?>
             <div>
                 <a class="<?= e($linkClasses) ?>" href="<?= e($item['href']) ?>"<?php if ($isActive): ?> aria-current="page"<?php endif; ?><?php if ($linkStyle !== ''): ?> style="<?= e($linkStyle) ?>"<?php endif; ?>>
-                    <span class="d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0" style="<?= e($iconWrapperStyle) ?> width: 42px; height: 42px; line-height: 0;">
+                    <span class="sidebar-icon-wrapper d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0" style="<?= e($iconWrapperStyle) ?> width: 42px; height: 42px; line-height: 0;">
                         <i class="<?= e($iconClasses) ?>"></i>
                     </span>
                     <span class="<?= e($labelClasses) ?>"><?= e($item['label']) ?></span>
@@ -111,7 +147,7 @@ if (function_exists('mb_strtoupper')) {
                         <?php foreach ($childItems as $child): ?>
                             <?php
                                 $isChildLinkActive = $currentPage === basename($child['href']);
-                                $childClasses = 'nav-link px-3 py-2 rounded-4 small fw-medium';
+                                $childClasses = 'nav-link px-3 py-2 rounded-4 small fw-medium sidebar-label';
                                 $childStyle = '';
                                 if ($isChildLinkActive) {
                                     $childClasses .= ' active text-primary-emphasis shadow-sm';
@@ -180,16 +216,16 @@ if (function_exists('mb_strtoupper')) {
                     $iconWrapperStyle = $isActive
                         ? 'background: rgba(255, 255, 255, 0.2); color: #ffffff;'
                         : 'background: rgba(99, 102, 241, 0.12); color: #4f46e5;';
-                    $iconClasses = 'bi ' . $item['icon'] . ' lh-1 fs-5';
+                    $iconClasses = 'bi ' . $item['icon'] . ' lh-1 fs-5 sidebar-icon';
                     $iconClasses .= $isActive ? ' text-white' : ' text-primary';
-                    $labelClasses = 'fw-semibold small';
+                    $labelClasses = 'fw-semibold small sidebar-label';
                     $labelClasses .= $isActive ? ' text-white' : ' text-body';
-                    $chevronClasses = 'ms-auto';
+                    $chevronClasses = 'ms-auto sidebar-chevron';
                     $chevronClasses .= $isActive ? ' text-white-75' : ' text-primary';
                 ?>
                 <div>
                     <a class="<?= e($linkClasses) ?>" href="<?= e($item['href']) ?>"<?php if ($isActive): ?> aria-current="page"<?php endif; ?><?php if ($linkStyle !== ''): ?> style="<?= e($linkStyle) ?>"<?php endif; ?>>
-                        <span class="d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0" style="<?= e($iconWrapperStyle) ?> width: 42px; height: 42px; line-height: 0;">
+                        <span class="sidebar-icon-wrapper d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0" style="<?= e($iconWrapperStyle) ?> width: 42px; height: 42px; line-height: 0;">
                             <i class="<?= e($iconClasses) ?>"></i>
                         </span>
                         <span class="<?= e($labelClasses) ?>"><?= e($item['label']) ?></span>
@@ -202,12 +238,12 @@ if (function_exists('mb_strtoupper')) {
                             <?php foreach ($childItems as $child): ?>
                                 <?php
                                     $isChildLinkActive = $currentPage === basename($child['href']);
-                                    $childClasses = 'nav-link px-3 py-2 rounded-4 small fw-medium';
-                                    $childStyle = '';
-                                    if ($isChildLinkActive) {
-                                        $childClasses .= ' active text-primary-emphasis shadow-sm';
-                                        $childStyle = 'background: rgba(99, 102, 241, 0.18);';
-                                    } else {
+                                $childClasses = 'nav-link px-3 py-2 rounded-4 small fw-medium sidebar-label';
+                                $childStyle = '';
+                                if ($isChildLinkActive) {
+                                    $childClasses .= ' active text-primary-emphasis shadow-sm';
+                                    $childStyle = 'background: rgba(99, 102, 241, 0.18);';
+                                } else {
                                         $childClasses .= ' text-body-secondary';
                                     }
                                 ?>
