@@ -56,7 +56,7 @@ if (function_exists('mb_strtoupper')) {
     $initials = strtoupper($initials);
 }
 ?>
-<aside class="sidebar col-auto d-none d-lg-flex flex-column flex-shrink-0 align-self-start px-4 py-4 position-sticky top-0 min-vh-100" style="width: 280px;">
+<aside class="sidebar col-auto d-none d-lg-flex flex-column flex-shrink-0 align-self-start px-4 py-4 position-sticky top-0 min-vh-100" style="width: 280px; font-size: 0.85rem;">
     <div class="d-flex align-items-center gap-3 mb-5">
         <div class="rounded-4 d-flex align-items-center justify-content-center" style="background: rgba(255, 255, 255, 0.08); width: 48px; height: 48px; line-height: 0;">
             <i class="bi bi-stars text-white fs-4 lh-1"></i>
@@ -131,7 +131,7 @@ if (function_exists('mb_strtoupper')) {
         </a>
     </div>
 </aside>
-<div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel">
+<div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel" style="font-size: 0.9rem;">
     <div class="offcanvas-header border-bottom border-secondary">
         <div>
             <div class="text-uppercase text-white-50 fw-semibold small">Nexa</div>
