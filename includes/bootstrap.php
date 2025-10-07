@@ -65,11 +65,24 @@ function get_db_connection(): PDO
 
     $dsn = sprintf('mysql:host=%s;port=%s;dbname=%s;charset=%s', $dbHost, $dbPort, $dbName, $charset);
 
-    $pdo = new PDO($dsn, $dbUser, $dbPass, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES => false,
-    ]);
+    try {
+        $pdo = new PDO($dsn, $dbUser, $dbPass, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES => false,
+        ]);
+    } catch (PDOException $exception) {
+        $message = 'Database connection failed. Please verify your database credentials in config.php or environment variables.';
+
+        if (PHP_SAPI === 'cli') {
+            throw new RuntimeException($message, 0, $exception);
+        }
+
+        error_log($exception->getMessage());
+        http_response_code(500);
+        echo $message;
+        exit;
+    }
 
     return $pdo;
 }
