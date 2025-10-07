@@ -21,6 +21,11 @@ $navItems = [
         'icon' => 'bi-building',
         'label' => 'Şirket',
     ],
+    [
+        'href' => 'company_contact.php',
+        'icon' => 'bi-people',
+        'label' => 'İletişim Kişileri',
+    ],
 ];
 ?>
 <aside class="sidebar d-none d-lg-flex flex-column flex-shrink-0 align-self-start text-white px-3 py-4 position-sticky top-0 min-vh-100" style="width: 260px;">
