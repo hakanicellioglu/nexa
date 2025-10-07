@@ -85,7 +85,7 @@ $navSections = [
         letter-spacing: 0.02em;
     }
 </style>
-<aside class="sidebar col-auto d-none d-lg-flex flex-column flex-shrink-0 align-self-start text-white px-3 py-4 position-sticky top-0 min-vh-100" style="width: 260px;">
+<aside class="sidebar col-auto d-none d-lg-flex flex-column flex-shrink-0 align-self-start text-white px-3 py-4 position-sticky top-0 min-vh-100" style="width: 280px;">
     <div class="d-flex align-items-center gap-3 mb-4">
         <div class="rounded-4 bg-primary-subtle text-primary fw-bold d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
             <span>N</span>
