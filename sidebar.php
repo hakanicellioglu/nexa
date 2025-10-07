@@ -57,7 +57,7 @@ if (function_exists('mb_strtoupper')) {
 ?>
 <aside class="sidebar col-auto d-none d-lg-flex flex-column flex-shrink-0 align-self-start px-4 py-4 position-sticky top-0 min-vh-100" style="width: 280px;">
     <div class="d-flex align-items-center gap-3 mb-5">
-        <div class="rounded-4 d-flex align-items-center justify-content-center" style="background: rgba(255, 255, 255, 0.08); width: 48px; height: 48px;">
+        <div class="rounded-4 d-flex align-items-center justify-content-center" style="background: rgba(255, 255, 255, 0.08); width: 48px; height: 48px; line-height: 0;">
             <i class="bi bi-stars text-white fs-4 lh-1"></i>
         </div>
         <div>
@@ -76,8 +76,8 @@ if (function_exists('mb_strtoupper')) {
                 }
             ?>
             <a class="<?= e($linkClasses) ?>" href="<?= e($item['href']) ?>"<?php if ($isActive): ?> aria-current="page"<?php endif; ?>>
-                <span class="d-inline-flex align-items-center justify-content-center rounded-3" style="background: rgba(255, 255, 255, 0.08); width: 42px; height: 42px;">
-                    <i class="bi <?= e($item['icon']) ?> lh-1 text-white<?= $isActive ? '' : ' opacity-75' ?>"></i>
+                <span class="d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0" style="background: rgba(255, 255, 255, 0.08); width: 42px; height: 42px; line-height: 0;">
+                    <i class="bi <?= e($item['icon']) ?> lh-1 fs-5 text-white<?= $isActive ? '' : ' opacity-75' ?>"></i>
                 </span>
                 <span class="fw-medium text-white<?= $isActive ? '' : ' opacity-75' ?>"><?= e($item['label']) ?></span>
                 <?php if ($isActive): ?>
@@ -88,8 +88,10 @@ if (function_exists('mb_strtoupper')) {
     </nav>
     <div class="mt-auto pt-4 border-top border-light border-opacity-25">
         <div class="d-flex align-items-center gap-3">
-            <div class="rounded-circle bg-white bg-opacity-10 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-                <span class="fw-semibold text-white"><?= e($initials) ?></span>
+            <div class="rounded-circle bg-white bg-opacity-10 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; line-height: 0;">
+                <span class="fw-semibold text-white" style="line-height: 1;">
+                    <?= e($initials) ?>
+                </span>
             </div>
             <div class="text-white">
                 <div class="fw-semibold mb-1"><?= e(trim($firstName . ' ' . $lastName)) ?></div>
@@ -121,8 +123,8 @@ if (function_exists('mb_strtoupper')) {
                     }
                 ?>
                 <a class="<?= e($linkClasses) ?>" href="<?= e($item['href']) ?>"<?php if ($isActive): ?> aria-current="page"<?php endif; ?>>
-                    <span class="d-inline-flex align-items-center justify-content-center rounded-3" style="background: rgba(255, 255, 255, 0.08); width: 42px; height: 42px;">
-                        <i class="bi <?= e($item['icon']) ?> lh-1 text-white<?= $isActive ? '' : ' opacity-75' ?>"></i>
+                    <span class="d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0" style="background: rgba(255, 255, 255, 0.08); width: 42px; height: 42px; line-height: 0;">
+                        <i class="bi <?= e($item['icon']) ?> lh-1 fs-5 text-white<?= $isActive ? '' : ' opacity-75' ?>"></i>
                     </span>
                     <span class="fw-medium text-white<?= $isActive ? '' : ' opacity-75' ?>"><?= e($item['label']) ?></span>
                     <?php if ($isActive): ?>
@@ -133,8 +135,10 @@ if (function_exists('mb_strtoupper')) {
         </nav>
         <div class="mt-auto border-top border-secondary pt-3">
             <div class="d-flex align-items-center gap-3 mb-3">
-                <div class="rounded-circle bg-white bg-opacity-10 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-                    <span class="fw-semibold text-white"><?= e($initials) ?></span>
+                <div class="rounded-circle bg-white bg-opacity-10 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; line-height: 0;">
+                    <span class="fw-semibold text-white" style="line-height: 1;">
+                        <?= e($initials) ?>
+                    </span>
                 </div>
                 <div>
                     <div class="fw-semibold text-white mb-1"><?= e(trim($firstName . ' ' . $lastName)) ?></div>
