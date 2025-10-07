@@ -92,7 +92,7 @@ if (function_exists('mb_strtoupper')) {
     .sidebar .nav-link:hover:not(.active),
     #sidebarOffcanvas .nav-link:hover:not(.active) {
         background-color: var(--sidebar-hover);
-        color: var(--sidebar-text);
+        color: var(--sidebar-accent-contrast);
     }
 
     .sidebar .nav-link.active,
