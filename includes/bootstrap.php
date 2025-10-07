@@ -6,6 +6,43 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 }
 
 /**
+ * Returns the merged application configuration array.
+ */
+function app_config(): array
+{
+    static $config = null;
+
+    if ($config !== null) {
+        return $config;
+    }
+
+    $defaults = [
+        'db' => [
+            'host' => '127.0.0.1',
+            'port' => 3306,
+            'name' => 'nexa',
+            'user' => 'nexa_user',
+            'password' => 'nexa_pass',
+            'charset' => 'utf8mb4',
+        ],
+    ];
+
+    $configPath = __DIR__ . '/../config.php';
+    $fileConfig = [];
+
+    if (is_file($configPath)) {
+        $loaded = require $configPath;
+        if (is_array($loaded)) {
+            $fileConfig = $loaded;
+        }
+    }
+
+    $config = array_replace_recursive($defaults, $fileConfig);
+
+    return $config;
+}
+
+/**
  * Returns the shared PDO connection.
  */
 function get_db_connection(): PDO
@@ -16,13 +53,17 @@ function get_db_connection(): PDO
         return $pdo;
     }
 
-    $dbHost = getenv('DB_HOST') ?: '127.0.0.1';
-    $dbPort = getenv('DB_PORT') ?: '3306';
-    $dbName = getenv('DB_NAME') ?: 'nexa';
-    $dbUser = getenv('DB_USER') ?: 'nexa_user';
-    $dbPass = getenv('DB_PASSWORD') ?: 'nexa_pass';
+    $config = app_config();
+    $dbConfig = $config['db'];
 
-    $dsn = sprintf('mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4', $dbHost, $dbPort, $dbName);
+    $dbHost = getenv('DB_HOST') ?: (string) $dbConfig['host'];
+    $dbPort = getenv('DB_PORT') ?: (string) $dbConfig['port'];
+    $dbName = getenv('DB_NAME') ?: (string) $dbConfig['name'];
+    $dbUser = getenv('DB_USER') ?: (string) $dbConfig['user'];
+    $dbPass = getenv('DB_PASSWORD') ?: (string) $dbConfig['password'];
+    $charset = (string) ($dbConfig['charset'] ?? 'utf8mb4');
+
+    $dsn = sprintf('mysql:host=%s;port=%s;dbname=%s;charset=%s', $dbHost, $dbPort, $dbName, $charset);
 
     $pdo = new PDO($dsn, $dbUser, $dbPass, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
