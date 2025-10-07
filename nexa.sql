@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Anamakine: 127.0.0.1:3306
--- Üretim Zamanı: 07 Eki 2025, 07:04:35
+-- Üretim Zamanı: 07 Eki 2025, 07:08:44
 -- Sunucu sürümü: 9.1.0
 -- PHP Sürümü: 8.3.14
 
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `company` (
   `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` int UNSIGNED NOT NULL,
   `name` varchar(150) COLLATE utf8mb4_turkish_ci NOT NULL,
-  `logo` varchar(255) COLLATE utf8mb4_turkish_ci DEFAULT NULL,
+  `logo` longblob,
   `adres` text COLLATE utf8mb4_turkish_ci,
   `phone` varchar(50) COLLATE utf8mb4_turkish_ci DEFAULT NULL,
   `fax` varchar(50) COLLATE utf8mb4_turkish_ci DEFAULT NULL,
