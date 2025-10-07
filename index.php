@@ -12,8 +12,8 @@ include __DIR__ . '/header.php';
             <h1 class="display-4 fw-bold mb-3">Nexa ile işinizi kolaylaştırın</h1>
             <p class="lead text-muted mb-4">Şirket bilgilerinizi tek noktadan yönetin, ekip arkadaşlarınızla paylaşın ve güncel tutun. Nexa ile süreçleriniz hem daha hızlı hem daha güvenli.</p>
             <div class="d-flex gap-3">
-                <a class="btn btn-primary btn-lg" href="/register.php">Hemen Başlayın</a>
-                <a class="btn btn-outline-secondary btn-lg" href="/login.php">Zaten hesabım var</a>
+                <a class="btn btn-primary btn-lg" href="register.php">Hemen Başlayın</a>
+                <a class="btn btn-outline-secondary btn-lg" href="login.php">Zaten hesabım var</a>
             </div>
         </div>
         <div class="col-lg-5">

@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             unset($user['password']);
             $_SESSION['user'] = $user;
-            header('Location: /dashboard.php');
+            header('Location: dashboard.php');
             exit;
         }
     }
@@ -68,7 +68,7 @@ include __DIR__ . '/header.php';
                         </div>
                         <button class="btn btn-primary w-100" type="submit">Giriş Yap</button>
                     </form>
-                    <p class="text-center small text-muted mt-3 mb-0">Hesabınız yok mu? <a href="/register.php">Kayıt olun</a>.</p>
+                    <p class="text-center small text-muted mt-3 mb-0">Hesabınız yok mu? <a href="register.php">Kayıt olun</a>.</p>
                 </div>
             </div>
         </div>

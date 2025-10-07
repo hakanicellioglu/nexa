@@ -103,7 +103,7 @@ function require_login(): array
 {
     $user = current_user();
     if ($user === null) {
-        header('Location: /login.php');
+        header('Location: login.php');
         exit;
     }
 
@@ -132,7 +132,7 @@ function require_api_user(): array
 function redirect_if_logged_in(): void
 {
     if (current_user() !== null) {
-        header('Location: /dashboard.php');
+        header('Location: dashboard.php');
         exit;
     }
 }

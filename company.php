@@ -150,7 +150,7 @@ include __DIR__ . '/header.php';
 
             const formData = new FormData(companyForm);
             const hasId = Boolean(formData.get('id'));
-            const endpoint = hasId ? '/api/company/edit.php' : '/api/company/add.php';
+            const endpoint = hasId ? 'api/company/edit.php' : 'api/company/add.php';
 
             try {
                 const response = await fetch(endpoint, {
@@ -190,7 +190,7 @@ include __DIR__ . '/header.php';
             formData.set('csrf_token', csrfToken);
 
             try {
-                const response = await fetch('/api/company/delete.php', {
+                const response = await fetch('api/company/delete.php', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-Token': csrfToken,
