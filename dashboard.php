@@ -11,18 +11,65 @@ $companyCountStmt->execute([':user_id' => $user['id']]);
 $companyCount = (int) $companyCountStmt->fetchColumn();
 
 $pageTitle = 'Panel - Nexa';
-include __DIR__ . '/header.php';
+$csrfToken = ensure_csrf_token();
+$hasSidebar = true;
 ?>
-<div class="container-fluid">
-    <div class="row">
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="<?= e($csrfToken) ?>">
+    <title><?= e($pageTitle) ?></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f6fa;
+        }
+        .app-layout {
+            min-height: 100vh;
+        }
+        .sidebar {
+            background: #111827;
+        }
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.75);
+            font-weight: 500;
+        }
+        .sidebar .nav-link.active,
+        .sidebar .nav-link:hover {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.12);
+        }
+        .sidebar .nav-link i {
+            width: 1.5rem;
+        }
+        .main-content {
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid app-layout">
+    <div class="row flex-nowrap">
         <?php include __DIR__ . '/sidebar.php'; ?>
-        <main class="col-lg-10 ms-auto px-4 py-4">
-            <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between mb-4">
+        <main class="col main-content px-3 px-lg-4 py-4">
+            <?php if ($hasSidebar): ?>
+                <button class="btn btn-outline-secondary d-lg-none mb-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas">
+                    <i class="bi bi-list me-1"></i> Menü
+                </button>
+            <?php endif; ?>
+            <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between mb-4 gap-3">
                 <div>
                     <h1 class="h3 fw-semibold mb-1">Merhaba, <?= e($user['firstname']) ?> 👋</h1>
                     <p class="text-muted mb-0">Kontrol panelinize hoş geldiniz. Şirket bilgilerinizi buradan yönetebilirsiniz.</p>
                 </div>
-                <a href="company.php" class="btn btn-primary mt-3 mt-lg-0"><i class="bi bi-building me-2"></i>Şirket Detayları</a>
+                <a href="company.php" class="btn btn-primary"><i class="bi bi-building me-2"></i>Şirket Detayları</a>
             </div>
             <div class="row g-4">
                 <div class="col-md-6 col-xl-4">
@@ -65,5 +112,6 @@ include __DIR__ . '/header.php';
         </main>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

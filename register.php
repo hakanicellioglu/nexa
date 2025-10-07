@@ -81,58 +81,114 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $pageTitle = 'Kayıt Ol - Nexa';
-include __DIR__ . '/header.php';
+$csrfToken = ensure_csrf_token();
+$user = current_user();
+$hasSidebar = $user !== null;
 ?>
-<main class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-6">
-            <div class="card shadow-sm border-0">
-                <div class="card-body p-4">
-                    <h1 class="h3 fw-semibold mb-3 text-center">Hesap Oluştur</h1>
-                    <?php if ($errors): ?>
-                        <div class="alert alert-danger">
-                            <ul class="mb-0">
-                                <?php foreach ($errors as $error): ?>
-                                    <li><?= e($error) ?></li>
-                                <?php endforeach; ?>
-                            </ul>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="<?= e($csrfToken) ?>">
+    <title><?= e($pageTitle) ?></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f6fa;
+        }
+        .app-layout {
+            min-height: 100vh;
+        }
+        .sidebar {
+            background: #111827;
+        }
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.75);
+            font-weight: 500;
+        }
+        .sidebar .nav-link.active,
+        .sidebar .nav-link:hover {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.12);
+        }
+        .sidebar .nav-link i {
+            width: 1.5rem;
+        }
+        .main-content {
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid app-layout">
+    <div class="row flex-nowrap">
+        <?php include __DIR__ . '/sidebar.php'; ?>
+        <main class="<?= $hasSidebar ? 'col main-content px-3 px-lg-4 py-4' : 'col-12 main-content px-3 px-md-5 py-5'; ?>">
+            <?php if ($hasSidebar): ?>
+                <button class="btn btn-outline-secondary d-lg-none mb-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas">
+                    <i class="bi bi-list me-1"></i> Menü
+                </button>
+            <?php endif; ?>
+            <div class="container-sm px-0">
+                <div class="row justify-content-center">
+                    <div class="col-lg-7 col-xl-6">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body p-4 p-lg-5">
+                                <h1 class="h3 fw-semibold mb-3 text-center">Hesap Oluştur</h1>
+                                <?php if ($errors): ?>
+                                    <div class="alert alert-danger">
+                                        <ul class="mb-0">
+                                            <?php foreach ($errors as $error): ?>
+                                                <li><?= e($error) ?></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    </div>
+                                <?php endif; ?>
+                                <form method="post" novalidate>
+                                    <input type="hidden" name="csrf_token" value="<?= e($csrfToken) ?>">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="firstname">Ad</label>
+                                            <input class="form-control" type="text" id="firstname" name="firstname" value="<?= e($form['firstname']) ?>" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="lastname">Soyad</label>
+                                            <input class="form-control" type="text" id="lastname" name="lastname" value="<?= e($form['lastname']) ?>" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="email">E-posta</label>
+                                            <input class="form-control" type="email" id="email" name="email" value="<?= e($form['email']) ?>" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="username">Kullanıcı adı</label>
+                                            <input class="form-control" type="text" id="username" name="username" value="<?= e($form['username']) ?>" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="password">Şifre</label>
+                                            <input class="form-control" type="password" id="password" name="password" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="password_confirm">Şifre (tekrar)</label>
+                                            <input class="form-control" type="password" id="password_confirm" name="password_confirm" required>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-primary w-100 mt-4" type="submit">Kayıt Ol</button>
+                                </form>
+                                <p class="text-center small text-muted mt-3 mb-0">Zaten hesabınız var mı? <a href="login.php">Giriş yapın</a>.</p>
+                            </div>
                         </div>
-                    <?php endif; ?>
-                    <form method="post" novalidate>
-                        <input type="hidden" name="csrf_token" value="<?= e(ensure_csrf_token()) ?>">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label" for="firstname">Ad</label>
-                                <input class="form-control" type="text" id="firstname" name="firstname" value="<?= e($form['firstname']) ?>" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" for="lastname">Soyad</label>
-                                <input class="form-control" type="text" id="lastname" name="lastname" value="<?= e($form['lastname']) ?>" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" for="email">E-posta</label>
-                                <input class="form-control" type="email" id="email" name="email" value="<?= e($form['email']) ?>" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" for="username">Kullanıcı adı</label>
-                                <input class="form-control" type="text" id="username" name="username" value="<?= e($form['username']) ?>" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" for="password">Şifre</label>
-                                <input class="form-control" type="password" id="password" name="password" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" for="password_confirm">Şifre (tekrar)</label>
-                                <input class="form-control" type="password" id="password_confirm" name="password_confirm" required>
-                            </div>
-                        </div>
-                        <button class="btn btn-primary w-100 mt-4" type="submit">Kayıt Ol</button>
-                    </form>
-                    <p class="text-center small text-muted mt-3 mb-0">Zaten hesabınız var mı? <a href="login.php">Giriş yapın</a>.</p>
+                    </div>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
-</main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
