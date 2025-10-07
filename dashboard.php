@@ -22,7 +22,7 @@ include __DIR__ . '/header.php';
                     <h1 class="h3 fw-semibold mb-1">Merhaba, <?= e($user['firstname']) ?> 👋</h1>
                     <p class="text-muted mb-0">Kontrol panelinize hoş geldiniz. Şirket bilgilerinizi buradan yönetebilirsiniz.</p>
                 </div>
-                <a href="/company.php" class="btn btn-primary mt-3 mt-lg-0"><i class="bi bi-building me-2"></i>Şirket Detayları</a>
+                <a href="company.php" class="btn btn-primary mt-3 mt-lg-0"><i class="bi bi-building me-2"></i>Şirket Detayları</a>
             </div>
             <div class="row g-4">
                 <div class="col-md-6 col-xl-4">

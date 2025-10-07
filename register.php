@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'username' => $form['username'],
             ];
 
-            header('Location: /dashboard.php');
+            header('Location: dashboard.php');
             exit;
         }
     }
@@ -128,7 +128,7 @@ include __DIR__ . '/header.php';
                         </div>
                         <button class="btn btn-primary w-100 mt-4" type="submit">Kayıt Ol</button>
                     </form>
-                    <p class="text-center small text-muted mt-3 mb-0">Zaten hesabınız var mı? <a href="/login.php">Giriş yapın</a>.</p>
+                    <p class="text-center small text-muted mt-3 mb-0">Zaten hesabınız var mı? <a href="login.php">Giriş yapın</a>.</p>
                 </div>
             </div>
         </div>

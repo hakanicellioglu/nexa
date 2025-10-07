@@ -41,18 +41,18 @@ $user = current_user();
 <body>
 <nav class="navbar navbar-expand-lg bg-white border-bottom shadow-sm">
     <div class="container-fluid">
-        <a class="navbar-brand fw-semibold" href="/">Nexa</a>
+        <a class="navbar-brand fw-semibold" href="index.php">Nexa</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
                 <?php if ($user === null): ?>
-                    <li class="nav-item"><a class="nav-link" href="/login.php">Giriş Yap</a></li>
-                    <li class="nav-item"><a class="btn btn-primary" href="/register.php">Kayıt Ol</a></li>
+                    <li class="nav-item"><a class="nav-link" href="login.php">Giriş Yap</a></li>
+                    <li class="nav-item"><a class="btn btn-primary" href="register.php">Kayıt Ol</a></li>
                 <?php else: ?>
-                    <li class="nav-item"><a class="nav-link" href="/dashboard.php">Panel</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/company.php">Şirket Bilgileri</a></li>
+                    <li class="nav-item"><a class="nav-link" href="dashboard.php">Panel</a></li>
+                    <li class="nav-item"><a class="nav-link" href="company.php">Şirket Bilgileri</a></li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-person-circle me-1"></i><?= e($user['firstname'] . ' ' . $user['lastname']) ?>
@@ -60,7 +60,7 @@ $user = current_user();
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><span class="dropdown-item-text text-muted small"><?= e($user['email']) ?></span></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="/logout.php">Çıkış Yap</a></li>
+                            <li><a class="dropdown-item" href="logout.php">Çıkış Yap</a></li>
                         </ul>
                     </li>
                 <?php endif; ?>
