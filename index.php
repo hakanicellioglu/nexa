@@ -61,8 +61,8 @@ $hasSidebar = $user !== null;
             <div class="container-xl px-0">
                 <div class="row align-items-center justify-content-between g-5 py-4">
                     <div class="col-xl-6">
-                        <h1 class="display-5 fw-bold mb-3">Nexa ile işinizi kolaylaştırın</h1>
-                        <p class="lead text-muted mb-4">Şirket bilgilerinizi tek noktadan yönetin, ekip arkadaşlarınızla paylaşın ve güncel tutun. Nexa ile süreçleriniz hem daha hızlı hem daha güvenli.</p>
+                        <h1 class="display-5 fw-bold mb-3">Nexa ile cam siparişlerinizi yönetin</h1>
+                        <p class="lead text-muted mb-4">Cam siparişlerinin durumunu takip edin, fiyat değişimlerini anında görün ve tüm müşteri taleplerini tek bir panelde yönetin. Nexa ile cam işlerinizi daha şeffaf ve kontrollü hale getirin.</p>
                         <div class="d-flex flex-wrap gap-3">
                             <a class="btn btn-primary btn-lg" href="register.php">Hemen Başlayın</a>
                             <a class="btn btn-outline-secondary btn-lg" href="login.php">Zaten hesabım var</a>
@@ -71,12 +71,12 @@ $hasSidebar = $user !== null;
                     <div class="col-xl-5">
                         <div class="card border-0 shadow-sm">
                             <div class="card-body p-4">
-                                <h2 class="h4 fw-semibold mb-3">Nexa'yı neden tercih etmelisiniz?</h2>
+                                <h2 class="h4 fw-semibold mb-3">Nexa'yı cam sektöründe neden tercih etmelisiniz?</h2>
                                 <ul class="list-unstyled small text-muted mb-0">
-                                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Basit ve sezgisel arayüz</li>
-                                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Güvenli kullanıcı yönetimi</li>
-                                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Gerçek zamanlı şirket güncellemeleri</li>
-                                    <li class="mb-0"><i class="bi bi-check-circle-fill text-success me-2"></i>Esnek API mimarisi</li>
+                                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Basit ve sezgisel cam siparişi arayüzü</li>
+                                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Güvenli müşteri ve proje yönetimi</li>
+                                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Gerçek zamanlı fiyat güncellemeleri</li>
+                                    <li class="mb-0"><i class="bi bi-check-circle-fill text-success me-2"></i>Esnek raporlama ve API entegrasyonu</li>
                                 </ul>
                             </div>
                         </div>
