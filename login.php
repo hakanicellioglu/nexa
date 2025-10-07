@@ -23,7 +23,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!$errors) {
         $pdo = get_db_connection();
-        $stmt = $pdo->prepare('SELECT id, firstname, lastname, email, username, password FROM users WHERE username = :username OR email = :username LIMIT 1');
+        $stmt = $pdo->prepare(
+            'SELECT id, firstname, lastname, email, username, password FROM users WHERE username = :username OR email = :username LIMIT 1'
+        );
         $stmt->execute([':username' => $username]);
         $user = $stmt->fetch();
 
