@@ -34,38 +34,342 @@ $hasSidebar = true;
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            --warning-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --info-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f5f6fa;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #111827;
         }
+
         .app-layout {
             min-height: 100vh;
         }
+
         .sidebar {
-            background: #111827;
+            background: rgba(17, 24, 39, 0.95);
+            backdrop-filter: blur(10px);
         }
+
         .sidebar .nav-link {
             color: rgba(255, 255, 255, 0.75);
             font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            margin: 4px 0;
         }
+
         .sidebar .nav-link.active,
         .sidebar .nav-link:hover {
             color: #fff;
-            background-color: rgba(255, 255, 255, 0.12);
+            background: var(--primary-gradient);
+            transform: translateX(5px);
         }
+
         .sidebar .nav-link i {
             width: 1.5rem;
         }
+
         .main-content {
             min-height: 100vh;
+            background: #f8f9fc;
+            box-shadow: -10px 0 40px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
         }
+
+        .welcome-card {
+            background: var(--primary-gradient);
+            border-radius: 24px;
+            color: white;
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 25px 60px rgba(102, 126, 234, 0.35);
+        }
+
+        .welcome-card::before,
+        .welcome-card::after {
+            content: '';
+            position: absolute;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 50%;
+            filter: blur(0.5px);
+        }
+
+        .welcome-card::before {
+            top: -45%;
+            right: -10%;
+            width: 420px;
+            height: 420px;
+        }
+
+        .welcome-card::after {
+            bottom: -35%;
+            left: -10%;
+            width: 320px;
+            height: 320px;
+        }
+
+        .welcome-card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-card h1 {
+            font-size: clamp(1.75rem, 3vw, 2.5rem);
+            font-weight: 700;
+        }
+
+        .meta-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .meta-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .btn-gradient {
+            background: var(--primary-gradient);
+            border: none;
+            color: #fff;
+            padding: 0.75rem 1.6rem;
+            border-radius: 14px;
+            font-weight: 600;
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.35);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-gradient:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .btn-gradient:hover:not(:disabled) {
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 20px 50px rgba(118, 75, 162, 0.4);
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.85);
+            border: none;
+            color: #1f2937;
+            padding: 0.75rem 1.4rem;
+            border-radius: 14px;
+            font-weight: 600;
+            transition: all 0.25s ease;
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 1);
+            color: #111827;
+            transform: translateY(-1px);
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 45px rgba(15, 23, 42, 0.12);
+            backdrop-filter: blur(20px);
+        }
+
+        .section-card .card-body {
+            padding: 2rem;
+        }
+
+        .info-alert {
+            padding: 2rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1.25rem;
+        }
+
+        .info-alert .icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.45);
+            color: #4338ca;
+            font-size: 1.75rem;
+        }
+
+        .info-alert h2 {
+            margin-bottom: 0.5rem;
+        }
+
         .table thead th {
-            font-size: 0.8rem;
-            letter-spacing: 0.04em;
+            font-size: 0.75rem;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
+            color: #6b7280;
+            border-bottom: none;
         }
-        .contact-actions button {
-            padding: 0.25rem 0.5rem;
+
+        .table tbody tr {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .table tbody tr:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(15, 23, 42, 0.08);
+        }
+
+        .table tbody td {
+            border-top: none;
+            padding: 1.15rem 1rem;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.45rem 0.9rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-pill-success {
+            background: rgba(17, 153, 142, 0.12);
+            color: #047857;
+        }
+
+        .status-pill-muted {
+            background: rgba(148, 163, 184, 0.18);
+            color: #475569;
+        }
+
+        .contact-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-icon:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12);
+        }
+
+        .btn-icon-secondary {
+            background: rgba(59, 130, 246, 0.12);
+            color: #2563eb;
+        }
+
+        .btn-icon-secondary:hover {
+            color: #1d4ed8;
+        }
+
+        .btn-icon-danger {
+            background: rgba(239, 68, 68, 0.12);
+            color: #b91c1c;
+        }
+
+        .btn-icon-danger:hover {
+            color: #991b1b;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 1.5rem;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: #c7d2fe;
+        }
+
+        .form-control,
+        .form-select,
+        textarea {
+            border-radius: 14px;
+            border-color: rgba(148, 163, 184, 0.4);
+            padding: 0.7rem 1rem;
+        }
+
+        .form-control:focus,
+        .form-select:focus,
+        textarea:focus {
+            border-color: rgba(102, 126, 234, 0.6);
+            box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.15);
+        }
+
+        #contactModal .modal-content {
+            border-radius: 24px;
+            border: none;
+            box-shadow: 0 25px 60px rgba(15, 23, 42, 0.35);
+        }
+
+        #contactModal .modal-header {
+            background: var(--primary-gradient);
+            color: #fff;
+            border-bottom: none;
+            border-top-left-radius: 24px;
+            border-top-right-radius: 24px;
+        }
+
+        #contactModal .modal-header .btn-close {
+            filter: invert(1);
+        }
+
+        #contactModal .modal-footer {
+            border-top: none;
+            padding: 1.5rem 2rem;
+        }
+
+        #contactModal .modal-body {
+            padding: 2rem;
+        }
+
+        @media (max-width: 767.98px) {
+            .welcome-card {
+                padding: 2rem;
+            }
+
+            .section-card .card-body {
+                padding: 1.5rem;
+            }
+
+            .info-alert {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
     </style>
 </head>
@@ -80,39 +384,60 @@ $hasSidebar = true;
                 </button>
             <?php endif; ?>
 
-            <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between mb-4 gap-3">
-                <div>
-                    <h1 class="h3 fw-semibold mb-1">İletişim Kişileri</h1>
-                    <p class="text-muted mb-0">Şirketinizle ilişkili kişileri yönetin ve iletişim bilgilerini güncel tutun.</p>
+            <div class="welcome-card">
+                <div class="welcome-card-content d-flex flex-column flex-lg-row justify-content-between align-items-lg-start gap-4">
+                    <div>
+                        <span class="text-uppercase fw-semibold small mb-2 d-inline-flex align-items-center gap-2">
+                            <i class="bi bi-people"></i>
+                            İletişim Kişileri
+                        </span>
+                        <h1 class="mb-3">Şirket ağınızı kolayca yönetin</h1>
+                        <p class="mb-0 opacity-75">Takım arkadaşlarınızı ve paydaşlarınızı tek bir yerden takip edin. Kişileri güncelleyin, yeni kişiler ekleyin ve iletişim bilgilerini paylaşın.</p>
+                        <?php if ($company): ?>
+                            <div class="meta-badges">
+                                <span class="meta-badge"><i class="bi bi-building"></i><?= e($company['name']) ?></span>
+                                <span class="meta-badge"><i class="bi bi-person-lines-fill"></i>Kayıtlı kişi: <?= count($contacts) ?></span>
+                            </div>
+                        <?php else: ?>
+                            <div class="meta-badges">
+                                <span class="meta-badge"><i class="bi bi-info-circle"></i>Önce şirket bilgisi oluşturun</span>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                    <div class="d-flex flex-column flex-sm-row gap-2">
+                        <button id="addContactBtn" class="btn btn-gradient" <?= $company ? '' : 'disabled' ?>>
+                            <i class="bi bi-person-plus-fill me-2"></i>Yeni kişi ekle
+                        </button>
+                        <button class="btn btn-ghost" type="button" onclick="window.location.href='company.php'">
+                            <i class="bi bi-building-gear me-2"></i>Şirket kartı
+                        </button>
+                    </div>
                 </div>
-                <button id="addContactBtn" class="btn btn-primary" <?= $company ? '' : 'disabled' ?>>
-                    <i class="bi bi-person-plus-fill me-2"></i>Yeni kişi ekle
-                </button>
             </div>
 
             <?php if (!$company): ?>
-                <div class="alert alert-info" role="alert">
-                    <div class="d-flex align-items-start gap-2">
-                        <i class="bi bi-info-circle fs-4"></i>
-                        <div>
-                            <h2 class="h6 fw-semibold mb-1">Şirket kaydı bulunamadı</h2>
-                            <p class="mb-0 small">Kişi ekleyebilmek için önce <a href="company.php" class="fw-semibold">şirket bilgilerinizi oluşturmalısınız</a>.</p>
-                        </div>
+                <div class="glass-card info-alert">
+                    <div class="icon"><i class="bi bi-info-circle"></i></div>
+                    <div>
+                        <h2 class="h5 fw-semibold">Şirket kaydı bulunamadı</h2>
+                        <p class="mb-0">Yeni bir kişi ekleyebilmek için önce <a href="company.php" class="fw-semibold text-decoration-none">şirket bilgilerinizi oluşturmalısınız</a>. Formu tamamladıktan sonra kişileri yönetebilirsiniz.</p>
                     </div>
                 </div>
             <?php else: ?>
-                <div class="card shadow-sm border-0">
+                <div class="card glass-card border-0 section-card">
                     <div class="card-body">
                         <?php if (empty($contacts)): ?>
-                            <div class="text-center py-5">
-                                <i class="bi bi-people text-muted" style="font-size: 3rem;"></i>
+                            <div class="empty-state">
+                                <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-white shadow-sm" style="width: 80px; height: 80px;">
+                                    <i class="bi bi-people"></i>
+                                </div>
                                 <h2 class="h5 fw-semibold mt-3">Henüz kişi eklenmemiş</h2>
-                                <p class="text-muted mb-0">Yeni bir kişi eklemek için sağ üstteki butonu kullanın.</p>
+                                <p class="text-muted mb-0">Yeni bir kişi eklemek için yukarıdaki butonu kullanın.</p>
                             </div>
                         <?php else: ?>
                             <div class="table-responsive">
                                 <table class="table align-middle mb-0">
-                                    <thead class="text-muted small">
+                                    <thead>
                                         <tr>
                                             <th scope="col">Ad</th>
                                             <th scope="col">Görev</th>
@@ -130,20 +455,20 @@ $hasSidebar = true;
                                                 <td><?= $contact['telefon'] ? e($contact['telefon']) : '<span class="text-muted">Belirtilmemiş</span>' ?></td>
                                                 <td>
                                                     <?php if ($contact['eposta']): ?>
-                                                        <a href="mailto:<?= e($contact['eposta']) ?>"><?= e($contact['eposta']) ?></a>
+                                                        <a href="mailto:<?= e($contact['eposta']) ?>" class="text-decoration-none fw-semibold link-primary"><?= e($contact['eposta']) ?></a>
                                                     <?php else: ?>
                                                         <span class="text-muted">Belirtilmemiş</span>
                                                     <?php endif; ?>
                                                 </td>
                                                 <td>
                                                     <?php if ((int) $contact['aktif'] === 1): ?>
-                                                        <span class="badge bg-success-subtle border border-success-subtle text-success-emphasis">Aktif</span>
+                                                        <span class="status-pill status-pill-success"><i class="bi bi-patch-check-fill"></i>Aktif</span>
                                                     <?php else: ?>
-                                                        <span class="badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis">Pasif</span>
+                                                        <span class="status-pill status-pill-muted"><i class="bi bi-pause-circle"></i>Pasif</span>
                                                     <?php endif; ?>
                                                 </td>
-                                                <td class="text-end contact-actions">
-                                                    <button type="button" class="btn btn-outline-secondary btn-sm me-1" data-edit-contact
+                                                <td class="contact-actions">
+                                                    <button type="button" class="btn-icon btn-icon-secondary" data-edit-contact
                                                             data-id="<?= (int) $contact['id'] ?>"
                                                             data-ad="<?= e($contact['ad'] ?? '') ?>"
                                                             data-gorev="<?= e($contact['gorev'] ?? '') ?>"
@@ -152,7 +477,7 @@ $hasSidebar = true;
                                                             data-aktif="<?= (int) $contact['aktif'] ?>">
                                                         <i class="bi bi-pencil"></i>
                                                     </button>
-                                                    <button type="button" class="btn btn-outline-danger btn-sm" data-delete-contact data-id="<?= (int) $contact['id'] ?>">
+                                                    <button type="button" class="btn-icon btn-icon-danger" data-delete-contact data-id="<?= (int) $contact['id'] ?>">
                                                         <i class="bi bi-trash"></i>
                                                     </button>
                                                 </td>
@@ -209,8 +534,8 @@ $hasSidebar = true;
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-between">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">İptal</button>
-                    <button type="submit" class="btn btn-primary" id="contactSubmit">
+                    <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-gradient" id="contactSubmit">
                         <i class="bi bi-save me-2"></i>Kaydet
                     </button>
                 </div>
