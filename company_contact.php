@@ -17,7 +17,7 @@ if ($company) {
     $contacts = $contactsStmt->fetchAll();
 }
 
-$pageTitle = 'İletişim Kişileri - Nexa';
+$pageTitle = 'Şirket Çalışanları - Nexa';
 $csrfToken = ensure_csrf_token();
 $hasSidebar = true;
 ?>
@@ -406,7 +406,7 @@ $hasSidebar = true;
                     <div>
                         <span class="text-uppercase fw-semibold small mb-2 d-inline-flex align-items-center gap-2">
                             <i class="bi bi-people"></i>
-                            İletişim Kişileri
+                            Şirket Çalışanları
                         </span>
                         <h1 class="mb-3">Şirket ağınızı kolayca yönetin</h1>
                         <p class="mb-0 opacity-75">Takım arkadaşlarınızı ve paydaşlarınızı tek bir yerden takip edin. Kişileri güncelleyin, yeni kişiler ekleyin ve iletişim bilgilerini paylaşın.</p>

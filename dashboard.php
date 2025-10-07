@@ -349,7 +349,7 @@ $hasSidebar = true;
                             <i class="bi bi-people"></i>
                         </div>
                         <div class="stat-value"><?= $contactCount ?></div>
-                        <div class="stat-label">İletişim Kişisi</div>
+                        <div class="stat-label">Şirket Çalışanları</div>
                     </div>
                 </div>
             </div>

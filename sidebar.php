@@ -24,7 +24,7 @@ $navItems = [
     [
         'href' => 'company_contact.php',
         'icon' => 'bi-people',
-        'label' => 'İletişim Kişileri',
+        'label' => 'Şirket Çalışanları',
     ],
 ];
 
