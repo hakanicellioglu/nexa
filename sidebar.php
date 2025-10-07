@@ -9,6 +9,21 @@ if ($user === null) {
     return;
 }
 
+$firstname = $user['firstname'] ?? '';
+$lastname = $user['lastname'] ?? '';
+
+if (function_exists('mb_substr')) {
+    $firstInitial = mb_substr($firstname, 0, 1, 'UTF-8');
+    $lastInitial = mb_substr($lastname, 0, 1, 'UTF-8');
+    $initials = mb_strtoupper($firstInitial . $lastInitial, 'UTF-8');
+} else {
+    $initials = strtoupper(substr($firstname, 0, 1) . substr($lastname, 0, 1));
+}
+
+if ($initials === '') {
+    $initials = 'N';
+}
+
 $currentPage = basename($_SERVER['PHP_SELF']);
 $navSections = [
     [
@@ -45,6 +60,29 @@ $navSections = [
     .offcanvas .nav-link:hover {
         transform: none !important;
     }
+
+    .sidebar .profile-avatar {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.85), rgba(118, 75, 162, 0.85));
+        padding: 2px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .sidebar .profile-avatar-inner {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: rgba(15, 23, 42, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+    }
 </style>
 <aside class="sidebar col-auto d-none d-lg-flex flex-column flex-shrink-0 align-self-start text-white px-3 py-4 position-sticky top-0 min-vh-100" style="width: 260px;">
     <div class="d-flex align-items-center gap-3 mb-4">
@@ -75,8 +113,10 @@ $navSections = [
     <div class="mt-auto w-100">
         <div class="p-3 rounded-4 bg-white bg-opacity-10 border border-light border-opacity-10">
             <div class="d-flex align-items-center gap-3">
-                <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
-                    <i class="bi bi-person-fill text-white"></i>
+                <div class="profile-avatar">
+                    <div class="profile-avatar-inner text-white">
+                        <span><?= e($initials) ?></span>
+                    </div>
                 </div>
                 <div class="flex-grow-1">
                     <div class="fw-semibold text-white mb-1"><?= e($user['firstname'] . ' ' . $user['lastname']) ?></div>
