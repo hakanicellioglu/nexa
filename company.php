@@ -13,7 +13,7 @@ $company = $companyStmt->fetch() ?: null;
 $pageTitle = 'Şirket Bilgileri - Nexa';
 include __DIR__ . '/header.php';
 ?>
-<div class="container-fluid">
+<div class="container">
     <div class="row">
         <?php include __DIR__ . '/sidebar.php'; ?>
         <main class="col-lg-10 ms-auto px-4 py-4">

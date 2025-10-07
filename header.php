@@ -40,7 +40,7 @@ $user = current_user();
 </head>
 <body>
 <nav class="navbar navbar-expand-lg bg-white border-bottom shadow-sm">
-    <div class="container-fluid">
+    <div class="container">
         <a class="navbar-brand fw-semibold" href="index.php">Nexa</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
