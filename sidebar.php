@@ -58,7 +58,7 @@ if (function_exists('mb_strtoupper')) {
 <aside class="sidebar col-auto d-none d-lg-flex flex-column flex-shrink-0 align-self-start px-4 py-4 position-sticky top-0 min-vh-100" style="width: 280px;">
     <div class="d-flex align-items-center gap-3 mb-5">
         <div class="rounded-4 d-flex align-items-center justify-content-center" style="background: rgba(255, 255, 255, 0.08); width: 48px; height: 48px;">
-            <i class="bi bi-stars text-white fs-4"></i>
+            <i class="bi bi-stars text-white fs-4 lh-1"></i>
         </div>
         <div>
             <div class="text-uppercase text-white-50 fw-semibold small">Nexa</div>
@@ -77,11 +77,11 @@ if (function_exists('mb_strtoupper')) {
             ?>
             <a class="<?= e($linkClasses) ?>" href="<?= e($item['href']) ?>"<?php if ($isActive): ?> aria-current="page"<?php endif; ?>>
                 <span class="d-inline-flex align-items-center justify-content-center rounded-3" style="background: rgba(255, 255, 255, 0.08); width: 42px; height: 42px;">
-                    <i class="bi <?= e($item['icon']) ?> text-white<?= $isActive ? '' : ' opacity-75' ?>"></i>
+                    <i class="bi <?= e($item['icon']) ?> lh-1 text-white<?= $isActive ? '' : ' opacity-75' ?>"></i>
                 </span>
                 <span class="fw-medium text-white<?= $isActive ? '' : ' opacity-75' ?>"><?= e($item['label']) ?></span>
                 <?php if ($isActive): ?>
-                    <span class="ms-auto text-white-50"><i class="bi bi-chevron-right"></i></span>
+                    <span class="ms-auto text-white-50"><i class="bi bi-chevron-right lh-1"></i></span>
                 <?php endif; ?>
             </a>
         <?php endforeach; ?>
@@ -97,7 +97,7 @@ if (function_exists('mb_strtoupper')) {
             </div>
         </div>
         <a class="btn btn-outline-light btn-sm w-100 mt-4" href="logout.php">
-            <i class="bi bi-box-arrow-right me-2"></i>Çıkış Yap
+            <i class="bi bi-box-arrow-right lh-1 me-2"></i>Çıkış Yap
         </a>
     </div>
 </aside>
@@ -122,11 +122,11 @@ if (function_exists('mb_strtoupper')) {
                 ?>
                 <a class="<?= e($linkClasses) ?>" href="<?= e($item['href']) ?>"<?php if ($isActive): ?> aria-current="page"<?php endif; ?>>
                     <span class="d-inline-flex align-items-center justify-content-center rounded-3" style="background: rgba(255, 255, 255, 0.08); width: 42px; height: 42px;">
-                        <i class="bi <?= e($item['icon']) ?> text-white<?= $isActive ? '' : ' opacity-75' ?>"></i>
+                        <i class="bi <?= e($item['icon']) ?> lh-1 text-white<?= $isActive ? '' : ' opacity-75' ?>"></i>
                     </span>
                     <span class="fw-medium text-white<?= $isActive ? '' : ' opacity-75' ?>"><?= e($item['label']) ?></span>
                     <?php if ($isActive): ?>
-                        <span class="ms-auto text-white-50"><i class="bi bi-chevron-right"></i></span>
+                        <span class="ms-auto text-white-50"><i class="bi bi-chevron-right lh-1"></i></span>
                     <?php endif; ?>
                 </a>
             <?php endforeach; ?>
@@ -142,7 +142,7 @@ if (function_exists('mb_strtoupper')) {
                 </div>
             </div>
             <a class="btn btn-outline-light btn-sm w-100" href="logout.php">
-                <i class="bi bi-box-arrow-right me-2"></i>Çıkış Yap
+                <i class="bi bi-box-arrow-right lh-1 me-2"></i>Çıkış Yap
             </a>
         </div>
     </div>
