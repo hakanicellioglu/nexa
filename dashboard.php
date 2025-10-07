@@ -60,6 +60,7 @@ $hasSidebar = true;
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            font-size: 0.95rem;
         }
         
         .app-layout {
@@ -127,10 +128,18 @@ $hasSidebar = true;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 50%;
         }
-        
+
         .welcome-card-content {
             position: relative;
             z-index: 1;
+        }
+
+        .welcome-card .h2 {
+            font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+        }
+
+        .welcome-card p {
+            font-size: 0.95rem;
         }
         
         .stat-card {
@@ -166,13 +175,13 @@ $hasSidebar = true;
         }
         
         .stat-icon {
-            width: 64px;
-            height: 64px;
+            width: 60px;
+            height: 60px;
             border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.75rem;
+            font-size: 1.5rem;
             margin-bottom: 1rem;
         }
         
@@ -197,7 +206,7 @@ $hasSidebar = true;
         }
         
         .stat-value {
-            font-size: 2.5rem;
+            font-size: 2.1rem;
             font-weight: 800;
             background: var(--primary-gradient);
             -webkit-background-clip: text;
@@ -206,11 +215,11 @@ $hasSidebar = true;
             line-height: 1;
             margin-bottom: 0.5rem;
         }
-        
+
         .stat-label {
             color: #6b7280;
             font-weight: 600;
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
@@ -231,7 +240,7 @@ $hasSidebar = true;
         
         .info-card-title {
             font-weight: 700;
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             color: #6b7280;

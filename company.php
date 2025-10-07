@@ -39,6 +39,7 @@ $hasSidebar = true;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             color: #111827;
+            font-size: 0.95rem;
         }
 
         .app-layout {
@@ -117,8 +118,12 @@ $hasSidebar = true;
         }
 
         .welcome-card h1 {
-            font-size: clamp(1.75rem, 3vw, 2.5rem);
+            font-size: clamp(1.4rem, 2.2vw, 2rem);
             font-weight: 700;
+        }
+
+        .welcome-card p {
+            font-size: 0.95rem;
         }
 
         .btn-gradient {
@@ -130,6 +135,7 @@ $hasSidebar = true;
             font-weight: 600;
             box-shadow: 0 15px 40px rgba(102, 126, 234, 0.35);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            font-size: 0.95rem;
         }
 
         .btn-gradient:hover {
@@ -146,6 +152,7 @@ $hasSidebar = true;
             border-radius: 14px;
             font-weight: 600;
             transition: all 0.25s ease;
+            font-size: 0.95rem;
         }
 
         .btn-ghost:hover {
@@ -183,14 +190,14 @@ $hasSidebar = true;
         }
 
         .detail-list dt {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             color: #6b7280;
         }
 
         .detail-list dd {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: #111827;
         }
@@ -215,7 +222,11 @@ $hasSidebar = true;
             background: rgba(255, 255, 255, 0.2);
             color: rgba(255, 255, 255, 0.9);
             font-weight: 500;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
+        }
+
+        .section-card h2 {
+            font-size: 1.1rem;
         }
 
         .form-control,
