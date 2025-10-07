@@ -14,17 +14,18 @@ $navItems = [
     [
         'href' => 'dashboard.php',
         'icon' => 'bi-speedometer',
-        'label' => 'Özet',
+        'label' => 'Kontrol Paneli',
     ],
     [
         'href' => 'company.php',
         'icon' => 'bi-building',
         'label' => 'Şirket',
-    ],
-    [
-        'href' => 'company_contact.php',
-        'icon' => 'bi-people',
-        'label' => 'Şirket Çalışanları',
+        'children' => [
+            [
+                'href' => 'company_contact.php',
+                'label' => 'Şirket Çalışanları',
+            ],
+        ],
     ],
 ];
 
@@ -61,29 +62,56 @@ if (function_exists('mb_strtoupper')) {
             <i class="bi bi-stars text-white fs-4 lh-1"></i>
         </div>
         <div>
-            <div class="text-uppercase text-white-50 fw-semibold small">Nexa</div>
-            <div class="text-white fw-bold fs-5">Kontrol Paneli</div>
+            <div class="text-uppercase text-white-50 fw-semibold small" id="sidebarOffcanvasLabel">Nexa</div>
         </div>
     </div>
     <div class="text-white-50 text-uppercase small fw-semibold mb-3">Menü</div>
     <nav class="nav flex-column gap-2 mb-auto">
         <?php foreach ($navItems as $item): ?>
             <?php
-                $isActive = $currentPage === basename($item['href']);
+                $childItems = $item['children'] ?? [];
+                $isChildActive = false;
+                foreach ($childItems as $child) {
+                    if ($currentPage === basename($child['href'])) {
+                        $isChildActive = true;
+                        break;
+                    }
+                }
+                $isActive = $currentPage === basename($item['href']) || $isChildActive;
                 $linkClasses = 'nav-link d-flex align-items-center gap-3 px-3 py-3 rounded-4';
                 if ($isActive) {
                     $linkClasses .= ' active';
                 }
             ?>
-            <a class="<?= e($linkClasses) ?>" href="<?= e($item['href']) ?>"<?php if ($isActive): ?> aria-current="page"<?php endif; ?>>
-                <span class="d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0" style="background: rgba(255, 255, 255, 0.08); width: 42px; height: 42px; line-height: 0;">
-                    <i class="bi <?= e($item['icon']) ?> lh-1 fs-5 text-white<?= $isActive ? '' : ' opacity-75' ?>"></i>
-                </span>
-                <span class="fw-medium text-white<?= $isActive ? '' : ' opacity-75' ?>"><?= e($item['label']) ?></span>
-                <?php if ($isActive): ?>
-                    <span class="ms-auto text-white-50"><i class="bi bi-chevron-right lh-1"></i></span>
+            <div>
+                <a class="<?= e($linkClasses) ?>" href="<?= e($item['href']) ?>"<?php if ($isActive): ?> aria-current="page"<?php endif; ?>>
+                    <span class="d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0" style="background: rgba(255, 255, 255, 0.08); width: 42px; height: 42px; line-height: 0;">
+                        <i class="bi <?= e($item['icon']) ?> lh-1 fs-5 text-white<?= $isActive ? '' : ' opacity-75' ?>"></i>
+                    </span>
+                    <span class="fw-medium text-white small<?= $isActive ? '' : ' opacity-75' ?>"><?= e($item['label']) ?></span>
+                    <?php if ($isActive): ?>
+                        <span class="ms-auto text-white-50"><i class="bi bi-chevron-right lh-1"></i></span>
+                    <?php endif; ?>
+                </a>
+                <?php if (!empty($childItems)): ?>
+                    <div class="nav flex-column gap-1 ps-5 mt-1">
+                        <?php foreach ($childItems as $child): ?>
+                            <?php
+                                $isChildLinkActive = $currentPage === basename($child['href']);
+                                $childClasses = 'nav-link px-3 py-2 rounded-4 text-white small';
+                                if ($isChildLinkActive) {
+                                    $childClasses .= ' active bg-white bg-opacity-10';
+                                } else {
+                                    $childClasses .= ' text-opacity-75';
+                                }
+                            ?>
+                            <a class="<?= e($childClasses) ?>" href="<?= e($child['href']) ?>"<?php if ($isChildLinkActive): ?> aria-current="page"<?php endif; ?>>
+                                <?= e($child['label']) ?>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
                 <?php endif; ?>
-            </a>
+            </div>
         <?php endforeach; ?>
     </nav>
     <div class="mt-auto pt-4 border-top border-light border-opacity-25">
@@ -107,7 +135,6 @@ if (function_exists('mb_strtoupper')) {
     <div class="offcanvas-header border-bottom border-secondary">
         <div>
             <div class="text-uppercase text-white-50 fw-semibold small">Nexa</div>
-            <h5 class="offcanvas-title text-white mb-0" id="sidebarOffcanvasLabel">Kontrol Paneli</h5>
         </div>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Kapat"></button>
     </div>
@@ -116,21 +143,49 @@ if (function_exists('mb_strtoupper')) {
         <nav class="nav flex-column gap-2 mb-4">
             <?php foreach ($navItems as $item): ?>
                 <?php
-                    $isActive = $currentPage === basename($item['href']);
+                    $childItems = $item['children'] ?? [];
+                    $isChildActive = false;
+                    foreach ($childItems as $child) {
+                        if ($currentPage === basename($child['href'])) {
+                            $isChildActive = true;
+                            break;
+                        }
+                    }
+                    $isActive = $currentPage === basename($item['href']) || $isChildActive;
                     $linkClasses = 'nav-link d-flex align-items-center gap-3 px-3 py-3 rounded-4';
                     if ($isActive) {
                         $linkClasses .= ' active';
                     }
                 ?>
-                <a class="<?= e($linkClasses) ?>" href="<?= e($item['href']) ?>"<?php if ($isActive): ?> aria-current="page"<?php endif; ?>>
-                    <span class="d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0" style="background: rgba(255, 255, 255, 0.08); width: 42px; height: 42px; line-height: 0;">
-                        <i class="bi <?= e($item['icon']) ?> lh-1 fs-5 text-white<?= $isActive ? '' : ' opacity-75' ?>"></i>
-                    </span>
-                    <span class="fw-medium text-white<?= $isActive ? '' : ' opacity-75' ?>"><?= e($item['label']) ?></span>
-                    <?php if ($isActive): ?>
-                        <span class="ms-auto text-white-50"><i class="bi bi-chevron-right lh-1"></i></span>
+                <div>
+                    <a class="<?= e($linkClasses) ?>" href="<?= e($item['href']) ?>"<?php if ($isActive): ?> aria-current="page"<?php endif; ?>>
+                        <span class="d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0" style="background: rgba(255, 255, 255, 0.08); width: 42px; height: 42px; line-height: 0;">
+                            <i class="bi <?= e($item['icon']) ?> lh-1 fs-5 text-white<?= $isActive ? '' : ' opacity-75' ?>"></i>
+                        </span>
+                        <span class="fw-medium text-white small<?= $isActive ? '' : ' opacity-75' ?>"><?= e($item['label']) ?></span>
+                        <?php if ($isActive): ?>
+                            <span class="ms-auto text-white-50"><i class="bi bi-chevron-right lh-1"></i></span>
+                        <?php endif; ?>
+                    </a>
+                    <?php if (!empty($childItems)): ?>
+                        <div class="nav flex-column gap-1 ps-5 mt-1">
+                            <?php foreach ($childItems as $child): ?>
+                                <?php
+                                    $isChildLinkActive = $currentPage === basename($child['href']);
+                                    $childClasses = 'nav-link px-3 py-2 rounded-4 text-white small';
+                                    if ($isChildLinkActive) {
+                                        $childClasses .= ' active bg-white bg-opacity-10';
+                                    } else {
+                                        $childClasses .= ' text-opacity-75';
+                                    }
+                                ?>
+                                <a class="<?= e($childClasses) ?>" href="<?= e($child['href']) ?>"<?php if ($isChildLinkActive): ?> aria-current="page"<?php endif; ?>>
+                                    <?= e($child['label']) ?>
+                                </a>
+                            <?php endforeach; ?>
+                        </div>
                     <?php endif; ?>
-                </a>
+                </div>
             <?php endforeach; ?>
         </nav>
         <div class="mt-auto border-top border-secondary pt-3">
