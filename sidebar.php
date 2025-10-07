@@ -33,6 +33,19 @@ $navSections = [
     ],
 ];
 ?>
+<style>
+    .sidebar .nav-link,
+    .offcanvas .nav-link {
+        transition: color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .sidebar .nav-link.active,
+    .sidebar .nav-link:hover,
+    .offcanvas .nav-link.active,
+    .offcanvas .nav-link:hover {
+        transform: none !important;
+    }
+</style>
 <aside class="sidebar col-auto d-none d-lg-flex flex-column flex-shrink-0 align-self-start text-white px-3 py-4 position-sticky top-0 min-vh-100" style="width: 260px;">
     <div class="d-flex align-items-center gap-3 mb-4">
         <div class="rounded-4 bg-primary-subtle text-primary fw-bold d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
