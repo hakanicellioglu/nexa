@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Anamakine: 127.0.0.1:3306
--- Üretim Zamanı: 07 Eki 2025, 07:08:44
+-- Üretim Zamanı: 07 Eki 2025, 08:40:34
 -- Sunucu sürümü: 9.1.0
 -- PHP Sürümü: 8.3.14
 
@@ -41,31 +41,14 @@ CREATE TABLE IF NOT EXISTS `company` (
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_turkish_ci;
-
--- --------------------------------------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_turkish_ci;
 
 --
--- Tablo için tablo yapısı `company_bank_accounts`
+-- Tablo döküm verisi `company`
 --
 
-DROP TABLE IF EXISTS `company_bank_accounts`;
-CREATE TABLE IF NOT EXISTS `company_bank_accounts` (
-  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
-  `company_id` int UNSIGNED NOT NULL,
-  `banka_adi` varchar(150) COLLATE utf8mb4_turkish_ci NOT NULL,
-  `sube_adi` varchar(150) COLLATE utf8mb4_turkish_ci DEFAULT NULL,
-  `hesap_no` varchar(50) COLLATE utf8mb4_turkish_ci DEFAULT NULL,
-  `iban` varchar(50) COLLATE utf8mb4_turkish_ci NOT NULL,
-  `para_birimi` varchar(10) COLLATE utf8mb4_turkish_ci DEFAULT NULL,
-  `aktif` tinyint(1) NOT NULL DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_company_bank_iban` (`iban`),
-  KEY `idx_company_bank_company_id` (`company_id`),
-  KEY `idx_company_bank_banka_adi` (`banka_adi`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_turkish_ci;
+INSERT INTO `company` (`id`, `user_id`, `name`, `logo`, `adres`, `phone`, `fax`, `website`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Yılmaz Alüminyum Cephe Sistemleri', NULL, 'Mimarsinan Organize Sanayi Bölgesi 9. Cad. No: 17 Melikgazi / KAYSERİ', '+90 352 320 09 09', '+90 352 322 1746', 'https://yilmazcephe.com.tr/', '2025-10-07 07:49:28', '2025-10-07 07:49:28');
 
 -- --------------------------------------------------------
 
@@ -92,23 +75,6 @@ CREATE TABLE IF NOT EXISTS `company_contacts` (
 -- --------------------------------------------------------
 
 --
--- Tablo için tablo yapısı `company_desc`
---
-
-DROP TABLE IF EXISTS `company_desc`;
-CREATE TABLE IF NOT EXISTS `company_desc` (
-  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
-  `company_id` int UNSIGNED NOT NULL,
-  `aciklama` text COLLATE utf8mb4_turkish_ci,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `company_id` (`company_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_turkish_ci;
-
--- --------------------------------------------------------
-
---
 -- Tablo için tablo yapısı `users`
 --
 
@@ -123,7 +89,14 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uniq_users_email` (`email`),
   UNIQUE KEY `uniq_users_username` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_turkish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_turkish_ci;
+
+--
+-- Tablo döküm verisi `users`
+--
+
+INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `username`, `password`) VALUES
+(1, 'Hakan Berke', 'İÇELLİOĞLU', 'hakanicellioglu@gmail.com', 'admin', '$2y$10$Njc6ua7odO7x5J8ulCiLweJ0fzjdxLfNZSQRT4wDWf72tTtLbgAE.');
 
 --
 -- Dökümü yapılmış tablolar için kısıtlamalar
@@ -136,22 +109,10 @@ ALTER TABLE `company`
   ADD CONSTRAINT `fk_company_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Tablo kısıtlamaları `company_bank_accounts`
---
-ALTER TABLE `company_bank_accounts`
-  ADD CONSTRAINT `fk_company_bank_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
 -- Tablo kısıtlamaları `company_contacts`
 --
 ALTER TABLE `company_contacts`
   ADD CONSTRAINT `fk_company_contacts_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Tablo kısıtlamaları `company_desc`
---
-ALTER TABLE `company_desc`
-  ADD CONSTRAINT `fk_company_desc_company` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
