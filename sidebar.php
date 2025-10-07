@@ -62,8 +62,8 @@ $navSections = [
     }
 
     .sidebar .profile-avatar {
-        width: 46px;
-        height: 46px;
+        width: 56px;
+        height: 56px;
         border-radius: 50%;
         background: linear-gradient(135deg, rgba(102, 126, 234, 0.85), rgba(118, 75, 162, 0.85));
         padding: 2px;
