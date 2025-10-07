@@ -50,17 +50,18 @@ $hasSidebar = true;
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
             --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
             --warning-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             --info-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
         }
-        
+
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #eef2ff 0%, #f8fafc 100%);
             min-height: 100vh;
             font-size: 0.95rem;
+            color: #1f2937;
         }
         
         .app-layout {
@@ -68,37 +69,45 @@ $hasSidebar = true;
         }
         
         .sidebar {
-            background: rgba(17, 24, 39, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border-right: 1px solid rgba(148, 163, 184, 0.25);
         }
-        
+
         .sidebar .nav-link {
-            color: rgba(255, 255, 255, 0.75);
-            font-weight: 500;
+            color: #475569;
+            font-weight: 600;
             transition: all 0.3s ease;
-            border-radius: 10px;
-            margin: 4px 0;
+            border-radius: 12px;
         }
-        
+
         .sidebar .nav-link.active,
         .sidebar .nav-link:hover {
             color: #fff;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-gradient);
             transform: translateX(5px);
+            box-shadow: 0 12px 25px rgba(99, 102, 241, 0.2);
         }
-        
+
         .sidebar .nav-link i {
             width: 1.5rem;
+            color: #6366f1;
+            transition: color 0.3s ease;
         }
-        
+
+        .sidebar .nav-link.active i,
+        .sidebar .nav-link:hover i {
+            color: #ffffff;
+        }
+
         .main-content {
             min-height: 100vh;
             background: #f8f9fc;
             box-shadow: -10px 0 40px rgba(0, 0, 0, 0.1);
         }
-        
+
         .welcome-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-gradient);
             border-radius: 20px;
             color: white;
             padding: 2.5rem;
