@@ -8,7 +8,7 @@
 
 $databaseConfig = [
     'host'    => '127.0.0.1',
-    'name'    => 'dashboard',
+    'name'    => 'nexa',
     'user'    => 'root',
     'pass'    => '',
     'charset' => 'utf8mb4',
