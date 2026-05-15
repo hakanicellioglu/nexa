@@ -8,7 +8,14 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // ── Veritabanı bağlantısı (config.php'den) ───────────────────────────────────
-require_once __DIR__ . '/config.php'; // $pdo (PDO nesnesi) burada tanımlanır
+$pdo = null;
+$pdoFromConfig = require_once __DIR__ . '/config.php'; // $pdo (PDO nesnesi) burada tanımlanır
+if ($pdoFromConfig instanceof PDO) {
+    $pdo = $pdoFromConfig;
+}
+if (!$pdo instanceof PDO) {
+    throw new RuntimeException('Veritabanı bağlantısı yapılandırılmadı.');
+}
 
 // ── Giriş yapan kullanıcı (SESSION'dan) ──────────────────────────────────────
 $stmt = $pdo->prepare('SELECT name, role, avatar FROM users WHERE id = ? LIMIT 1');
