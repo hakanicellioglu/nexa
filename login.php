@@ -1,16 +1,54 @@
 <?php
 session_start();
+require_once __DIR__ . '/toast.php';
 
-// Hata mesajları tanımlamaları
+if (isset($_SESSION['user_id'])) {
+    header('Location: dashboard.php');
+    exit;
+}
+
 $error_messages = [
     'invalid_credentials' => 'Kullanıcı adı veya şifre hatalı.',
+    'missing_fields'      => 'Lütfen kullanıcı adı ve parolanızı giriniz.',
     'account_locked'      => 'Hesabınız geçici olarak kilitlendi. Lütfen daha sonra tekrar deneyin.',
     'session_expired'     => 'Oturumunuz sona erdi. Lütfen tekrar giriş yapın.',
     'too_many_attempts'   => 'Çok fazla başarısız deneme. Lütfen 15 dakika bekleyin.',
 ];
 
-$error_key = $_GET['error'] ?? null;
-$error     = isset($error_messages[$error_key]) ? $error_messages[$error_key] : null;
+$error_key = null;
+$toasts = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = trim($_POST['username'] ?? '');
+    $password = $_POST['password'] ?? '';
+
+    if ($username === '' || $password === '') {
+        $error_key = 'missing_fields';
+    } else {
+        $pdoFromConfig = require_once __DIR__ . '/config.php';
+        if (!$pdoFromConfig instanceof PDO) {
+            throw new RuntimeException('Veritabanı bağlantısı yapılandırılamadı.');
+        }
+        $pdo = $pdoFromConfig;
+
+        $stmt = $pdo->prepare('SELECT id, password FROM users WHERE username = ? OR email = ? LIMIT 1');
+        $stmt->execute([$username, $username]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user && password_verify($password, $user['password'])) {
+            session_regenerate_id(true);
+            $_SESSION['user_id'] = $user['id'];
+            header('Location: dashboard.php');
+            exit;
+        }
+
+        $error_key = 'invalid_credentials';
+    }
+}
+
+if ($error_key && isset($error_messages[$error_key])) {
+    $toasts = toast($error_messages[$error_key], 'error');
+}
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -157,20 +195,9 @@ $error     = isset($error_messages[$error_key]) ? $error_messages[$error_key] : 
 
         <!-- Kart -->
         <div class="card-glass rounded-2xl border border-slate-200/80 shadow-xl shadow-slate-200/60 p-8">
-
-            <!-- ── PHP Hata Bloğu ── -->
-            <?php if (isset($error)): ?>
-            <div class="mb-6 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3.5 text-sm text-red-700 animate-slide-down" role="alert">
-                <svg xmlns="http://www.w3.org/2000/svg" class="mt-0.5 w-4 h-4 shrink-0 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <span><?= htmlspecialchars($error) ?></span>
-            </div>
-            <?php endif; ?>
-
+            <?= $toasts ?>
             <!-- ── Form ── -->
-            <form id="loginForm" action="#" method="post" novalidate>
+            <form id="loginForm" action="login.php" method="post" novalidate>
 
                 <!-- Kullanıcı adı -->
                 <div class="mb-5">
